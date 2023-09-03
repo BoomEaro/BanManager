@@ -146,7 +146,7 @@ public class BanCommand extends CommonCommand {
         return;
       }
 
-      if (sender.isConsole()) {
+      if (sender.isTrueNotConsole()) {
           Message message;
 
           if (ban.getExpires() == 0) {

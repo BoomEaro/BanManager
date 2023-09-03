@@ -101,7 +101,7 @@ public class UnbanCommand extends CommonCommand {
               .set("id", ban.getId())
               .set("reason", reason);
 
-      if (sender.isConsole()) {
+      if (sender.isTrueNotConsole()) {
         sender.sendMessage(message);
       }
 

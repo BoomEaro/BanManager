@@ -9,5 +9,8 @@ public interface CommonSender {
   void sendMessage(String message);
   void sendMessage(Message message);
   boolean isConsole();
+  default boolean isTrueNotConsole() {
+    return false;
+  }
   PlayerData getData();
 }

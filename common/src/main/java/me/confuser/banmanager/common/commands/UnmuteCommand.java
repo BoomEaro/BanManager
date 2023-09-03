@@ -106,7 +106,7 @@ public class UnmuteCommand extends CommonCommand {
                 .set("id", mute.getId())
                 .set("reason", reason);
 
-        if (sender.isConsole()) {
+        if (sender.isTrueNotConsole()) {
           sender.sendMessage(message);
         }
 

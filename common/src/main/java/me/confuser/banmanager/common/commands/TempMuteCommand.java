@@ -173,7 +173,7 @@ public class TempMuteCommand extends CommonCommand {
         return;
       }
 
-      if (sender.isConsole()) {
+      if (sender.isTrueNotConsole()) {
         Message message;
 
         if (mute.getExpires() == 0) {

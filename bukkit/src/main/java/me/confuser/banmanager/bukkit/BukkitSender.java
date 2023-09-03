@@ -6,6 +6,7 @@ import me.confuser.banmanager.common.data.PlayerData;
 import me.confuser.banmanager.common.util.Message;
 import me.confuser.banmanager.common.util.UUIDUtils;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
@@ -42,6 +43,14 @@ public class BukkitSender implements CommonSender {
 
   @Override
   public boolean isConsole() {
+    return !(sender instanceof Player);
+  }
+
+  @Override
+  public boolean isTrueNotConsole() {
+    if (sender instanceof ConsoleCommandSender) {
+      return false;
+    }
     return !(sender instanceof Player);
   }
 
