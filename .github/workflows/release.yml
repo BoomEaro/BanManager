@@ -27,12 +27,12 @@ jobs:
           asset_path: bukkit/build/libs/BanManagerBukkit.jar
           asset_name: BanManagerBukkit.jar
           asset_content_type: application/java-archive
-      - name: Upload BanManagerBungee.jar to the GitHub release
+      - name: Upload BanManagerBungeeCord.jar to the GitHub release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: bungee/build/libs/BanManagerBungee.jar
-          asset_name: BanManagerBungee.jar
+          asset_path: bungee/build/libs/BanManagerBungeeCord.jar
+          asset_name: BanManagerBungeeCord.jar
           asset_content_type: application/java-archive
