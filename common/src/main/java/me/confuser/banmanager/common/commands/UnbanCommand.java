@@ -101,6 +101,10 @@ public class UnbanCommand extends CommonCommand {
               .set("id", ban.getId())
               .set("reason", reason);
 
+      if (sender.isConsole()) {
+        sender.sendMessage(message);
+      }
+
       if (!sender.hasPermission("bm.notify.unban") || parser.isSilent()) {
         message.sendTo(sender);
       }

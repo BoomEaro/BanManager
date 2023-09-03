@@ -106,6 +106,10 @@ public class UnmuteCommand extends CommonCommand {
                 .set("id", mute.getId())
                 .set("reason", reason);
 
+        if (sender.isConsole()) {
+          sender.sendMessage(message);
+        }
+
         if (!sender.hasPermission("bm.notify.unmute") || parser.isSilent()) {
           message.sendTo(sender);
         }

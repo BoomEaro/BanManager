@@ -4,6 +4,7 @@ import me.confuser.banmanager.common.BanManagerPlugin;
 import me.confuser.banmanager.common.CommonPlayer;
 import me.confuser.banmanager.common.data.PlayerBanData;
 import me.confuser.banmanager.common.data.PlayerData;
+import me.confuser.banmanager.common.util.DateUtils;
 import me.confuser.banmanager.common.util.Message;
 
 import java.sql.SQLException;
@@ -143,6 +144,26 @@ public class BanCommand extends CommonCommand {
 
       if (!created) {
         return;
+      }
+
+      if (sender.isConsole()) {
+          Message message;
+
+          if (ban.getExpires() == 0) {
+              message = Message.get("ban.notify");
+          } else {
+              message = Message.get("tempban.notify");
+              message.set("expires", DateUtils.getDifferenceFormat(ban.getExpires()));
+          }
+
+          message
+                  .set("id", ban.getId())
+                  .set("player", ban.getPlayer().getName())
+                  .set("playerId", ban.getPlayer().getUUID().toString())
+                  .set("actor", ban.getActor().getName())
+                  .set("reason", ban.getReason());
+
+          sender.sendMessage(message);
       }
 
       handlePrivateNotes(player, actor, parser.getReason());

@@ -173,6 +173,25 @@ public class TempMuteCommand extends CommonCommand {
         return;
       }
 
+      if (sender.isConsole()) {
+        Message message;
+
+        if (mute.getExpires() == 0) {
+          message = Message.get("mute.notify");
+        } else {
+          message = Message.get("tempmute.notify");
+          message.set("expires", DateUtils.getDifferenceFormat(mute.getExpires()));
+        }
+
+        message
+                .set("id", mute.getId())
+                .set("player", mute.getPlayer().getName())
+                .set("playerId", mute.getPlayer().getUUID().toString())
+                .set("actor", mute.getActor().getName())
+                .set("reason", mute.getReason());
+        sender.sendMessage(message);
+      }
+
       handlePrivateNotes(player, actor, reason);
 
       CommonPlayer onlinePlayer1 = getPlugin().getServer().getPlayer(player.getUUID());

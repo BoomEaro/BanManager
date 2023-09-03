@@ -167,6 +167,26 @@ public class TempBanCommand extends CommonCommand {
           return;
         }
 
+        if (sender.isConsole()) {
+          Message message;
+
+          if (ban.getExpires() == 0) {
+            message = Message.get("ban.notify");
+          } else {
+            message = Message.get("tempban.notify");
+            message.set("expires", DateUtils.getDifferenceFormat(ban.getExpires()));
+          }
+
+          message
+                  .set("id", ban.getId())
+                  .set("player", ban.getPlayer().getName())
+                  .set("playerId", ban.getPlayer().getUUID().toString())
+                  .set("actor", ban.getActor().getName())
+                  .set("reason", ban.getReason());
+
+          sender.sendMessage(message);
+        }
+
         handlePrivateNotes(player, actor, reason);
 
         getPlugin().getScheduler().runSync(() -> {
