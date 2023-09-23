@@ -63,6 +63,7 @@ configurations {
 dependencies {
     api(project(":BanManagerCommon"))
     compileOnly("net.md-5:bungeecord-api:1.14-SNAPSHOT")
+    compileOnly("net.md-5:bungeecord-proxy:1.14-SNAPSHOT")
     "shadeOnly"("org.bstats:bstats-bungeecord:2.2.1")
 }
 

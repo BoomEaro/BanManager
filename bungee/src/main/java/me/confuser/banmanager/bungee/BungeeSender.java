@@ -7,6 +7,7 @@ import me.confuser.banmanager.common.data.PlayerData;
 import me.confuser.banmanager.common.util.Message;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.command.ConsoleCommandSender;
 
 public class BungeeSender implements CommonSender {
 
@@ -40,6 +41,14 @@ public class BungeeSender implements CommonSender {
 
   @Override
   public boolean isConsole() {
+    return !(sender instanceof ProxiedPlayer);
+  }
+
+  @Override
+  public boolean isTrueNotConsole() {
+    if (sender instanceof ConsoleCommandSender) {
+      return false;
+    }
     return !(sender instanceof ProxiedPlayer);
   }
 
