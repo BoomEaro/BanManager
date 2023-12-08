@@ -97,7 +97,11 @@ public class PlayerStorage extends BaseDaoImpl<PlayerData, byte[]> {
       itr = this.queryBuilder().selectColumns("name").iterator();
 
       while (itr.hasNext()) {
-        autoCompleteTree.put(itr.next().getName(), VoidValue.SINGLETON);
+        String name = itr.next().getName();
+        if (name.isEmpty()) {
+          continue;
+        }
+        autoCompleteTree.put(name, VoidValue.SINGLETON);
       }
     } catch (SQLException e) {
       e.printStackTrace();
