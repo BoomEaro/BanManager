@@ -2,6 +2,7 @@ package me.confuser.banmanager.common.data;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import me.confuser.banmanager.common.ipaddr.AddressStringException;
 import me.confuser.banmanager.common.ipaddr.IPAddress;
 import me.confuser.banmanager.common.ipaddr.IPAddressString;
@@ -15,6 +16,7 @@ import me.confuser.banmanager.common.util.UUIDUtils;
 import java.util.UUID;
 
 @DatabaseTable(tableName = "players", daoClass = PlayerStorage.class)
+@ToString
 public class PlayerData {
 
   @DatabaseField(id = true, persisterClass = ByteArray.class, columnDefinition = "BINARY(16) NOT NULL")

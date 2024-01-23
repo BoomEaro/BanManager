@@ -10,7 +10,6 @@ import me.confuser.banmanager.common.kyori.text.Component;
 import me.confuser.banmanager.common.kyori.text.TextComponent;
 import me.confuser.banmanager.common.kyori.text.event.ClickEvent;
 import me.confuser.banmanager.common.kyori.text.format.NamedTextColor;
-import me.confuser.banmanager.common.kyori.text.format.TextColor;
 import me.confuser.banmanager.common.util.Message;
 import me.confuser.banmanager.common.util.UUIDUtils;
 
@@ -41,7 +40,7 @@ public class DuplicatesSubCommand extends CommonSubCommand {
             .getPlayerStorage()
             .getDuplicateNames();
 
-        if (duplicates.size() == 0) {
+        if (duplicates.isEmpty()) {
           Message.get("bmutils.duplicates.lookup.notFound").sendTo(sender);
         }
 
@@ -95,7 +94,7 @@ public class DuplicatesSubCommand extends CommonSubCommand {
             return;
           }
 
-          if (getPlugin().getPlayerStorage().retrieve(newName).size() != 0) {
+          if (!getPlugin().getPlayerStorage().retrieve(newName).isEmpty()) {
             sender.sendMessage(Message.get("bmutils.duplicates.error.nameExists"));
             return;
           }
@@ -108,7 +107,6 @@ public class DuplicatesSubCommand extends CommonSubCommand {
         } catch (SQLException e) {
           sender.sendMessage(Message.get("sender.error.exception"));
           e.printStackTrace();
-          return;
         }
       }
     });
