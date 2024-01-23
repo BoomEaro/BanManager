@@ -25,15 +25,17 @@ public class JoinListener implements Listener {
     this.listener = new CommonJoinListener(plugin.getPlugin());
   }
 
-  @EventHandler(priority = EventPriority.LOW)
+  @EventHandler(priority = EventPriority.HIGH)
   public void banCheck(LoginEvent event) {
     event.registerIntent(plugin);
 
     plugin.getPlugin().getScheduler().runAsync(() -> {
-      listener.banCheck(event.getConnection().getUniqueId(), event.getConnection().getName(), IPUtils.toIPAddress(event.getConnection().getAddress().getAddress()), new BanJoinHandler(plugin.getPlugin(), event));
-
       if (!event.isCancelled()) {
-        listener.onPreJoin(event.getConnection().getUniqueId(), event.getConnection().getName(), IPUtils.toIPAddress(event.getConnection().getAddress().getAddress()));
+        listener.banCheck(event.getConnection().getUniqueId(), event.getConnection().getName(), IPUtils.toIPAddress(event.getConnection().getAddress().getAddress()), new BanJoinHandler(plugin.getPlugin(), event));
+
+        if (!event.isCancelled()) {
+          listener.onPreJoin(event.getConnection().getUniqueId(), event.getConnection().getName(), IPUtils.toIPAddress(event.getConnection().getAddress().getAddress()));
+        }
       }
 
       event.completeIntent(plugin);
