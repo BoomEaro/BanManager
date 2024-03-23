@@ -140,6 +140,16 @@ messages:
       exists: '&c[player] is already banned'
       cooldown: '&cThis player was banned too recently, try again later'
 
+  aban:
+    player:
+      disallowed: '&6You have been abanned from this server for &4[reason]'
+      kick: '&6You have been abanned permanently for &4[reason]'
+      dateTimeFormat: 'yyyy-MM-dd HH:mm:ss'
+    notify: '&6[player] has been permanently abanned by [actor] for &4[reason]'
+    error:
+      exists: '&c[player] is already abanned'
+      cooldown: '&cThis player was abanned too recently, try again later'
+
   banall:
     notify: '&6[player] will be permanently banned by [actor] for &4[reason]'
 
@@ -158,6 +168,12 @@ messages:
     error:
       noExists: '&c[player] is not banned'
       notOwn: '&c[player] was not banned by you, unable to unban'
+
+  aunban:
+    notify: '&6[player] has been aunbanned by [actor]'
+    error:
+      noExists: '&c[player] is not abanned'
+      notOwn: '&c[player] was not abanned by you, unable to unban'
 
   unbanall:
     notify: '&6[player] will be unbanned by [actor]'

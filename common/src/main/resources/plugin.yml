@@ -17,127 +17,137 @@ commands:
   ban:
     description: "ban a player"
     usage: "/ban <player> <reason>"
-    aliases: [bmban]
+    aliases: [ bmban ]
     permission: bm.command.ban
+  aban:
+    description: "aban a player"
+    usage: "/aban <player> <reason>"
+    aliases: [ bmaban ]
+    permission: bm.command.aban
   banall:
     description: "ban a player across multiple servers"
     usage: "/banall <player> <reason>"
-    aliases: [bmbanall]
+    aliases: [ bmbanall ]
     permission: bm.command.banall
   tempban:
     description: "tempban a player"
     usage: "/tempban <player> <timeDiff> <reason>"
-    aliases: [bmtempban]
+    aliases: [ bmtempban ]
     permission: bm.command.tempban
   tempbanall:
     description: "tempban a player across multiple servers"
     usage: "/tempbanall <player> <timeDiff> <reason>"
-    aliases: [bmtempbanall]
+    aliases: [ bmtempbanall ]
     permission: bm.command.tempbanall
   unban:
     description: "unban a player"
     usage: "/unban <player> [reason]"
-    aliases: [bmunban, pardon]
+    aliases: [ bmunban, pardon ]
     permission: bm.command.unban
+  aunban:
+    description: "aunban a player"
+    usage: "/aunban <player> [reason]"
+    aliases: [ bmunaban, apardon ]
+    permission: bm.command.aunban
   unbanall:
     description: "unban a player across multiple servers"
     usage: "/unbanall <player> [reason]"
-    aliases: [bmunbanall]
+    aliases: [ bmunbanall ]
     permission: bm.command.unbanall
   bminfo:
     description: "see information on a player"
     usage: "/bminfo <player> [index]"
-    aliases: [bmbminfo]
+    aliases: [ bmbminfo ]
     permission: bm.command.bminfo
   banip:
     description: "ban an ip"
     usage: "/banip <player || ip> <reason>"
-    aliases: [bmbanip]
+    aliases: [ bmbanip ]
     permission: bm.command.banip
   banipall:
     description: "ban an ip across multiple servers"
     usage: "/banipall <player || ip> <reason>"
-    aliases: [bmbanipall]
+    aliases: [ bmbanipall ]
     permission: bm.command.banipall
   tempbanip:
     description: "tempban an ip"
     usage: "/tempbanip <player || ip> <timeDiff> <reason>"
-    aliases: [bmtempbanip]
+    aliases: [ bmtempbanip ]
     permission: bm.command.tempbanip
   tempbanipall:
     description: "tempban an ip across multiple servers"
     usage: "/tempbanipall <player || ip> <timeDiff> <reason>"
-    aliases: [bmtempbanipall]
+    aliases: [ bmtempbanipall ]
     permission: bm.command.tempbanipall
   unbanip:
     description: "unban's an ip"
     usage: "/unbanip <ip> [reason]"
-    aliases: [bmunbanip, pardonip]
+    aliases: [ bmunbanip, pardonip ]
     permission: bm.command.unbanip
   unbanipall:
     description: "unban's an ip across multiple servers"
     usage: "/unbanipall <ip> [reason]"
-    aliases: [bmunbanipall]
+    aliases: [ bmunbanipall ]
     permission: bm.command.unbanipall
   bmimport:
     description: "imports bans"
     usage: "/bmimport <player || ip>"
-    aliases: [bmbanimport, banimport]
+    aliases: [ bmbanimport, banimport ]
     permission: bm.command.import
   kick:
     description: "kick a player"
     usage: "/kick <player> <reason>"
-    aliases: [bmkick]
+    aliases: [ bmkick ]
     permission: bm.command.kick
   mute:
     description: "mutes a player"
     usage: "/mute <player> <reason>"
-    aliases: [bmmute]
+    aliases: [ bmmute ]
     permission: bm.command.mute
   muteip:
     description: "mutes an ip"
     usage: "/muteip <ip || player> <reason>"
-    aliases: [bmmuteip]
+    aliases: [ bmmuteip ]
     permission: bm.command.muteip
   muteall:
     description: "mutes a player across multiple servers"
     usage: "/muteall <player> <reason>"
-    aliases: [bmmuteall]
+    aliases: [ bmmuteall ]
     permission: bm.command.muteall
   tempmute:
     description: "temp mutes a player"
     usage: "/tempmute <player> <timeDiff> <reason>"
-    aliases: [bmtempmute]
+    aliases: [ bmtempmute ]
     permission: bm.command.tempmute
   tempmuteip:
     description: "temp mutes an ip"
     usage: "/tempmute <ip || player> <timeDiff> <reason>"
-    aliases: [bmtempmuteip]
+    aliases: [ bmtempmuteip ]
     permission: bm.command.tempmuteip
   tempmuteall:
     description: "temp mutes a player across multiple servers"
     usage: "/tempmuteall <player> <timeDiff> <reason>"
-    aliases: [bmtempmuteall]
+    aliases: [ bmtempmuteall ]
     permission: bm.command.tempmuteall
   unmute:
     description: "unmute a player"
     usage: "/unmute <player> [reason]"
-    aliases: [bmunmute]
+    aliases: [ bmunmute ]
     permission: bm.command.unmute
   unmuteip:
     description: "unmute an ip"
     usage: "/unmuteip <ip || player> [reason]"
-    aliases: [bmunmuteip]
+    aliases: [ bmunmuteip ]
     permission: bm.command.unmuteip
   unmuteall:
     description: "unmute a player across multiple servers"
     usage: "/unmuteall <player> [reason]"
-    aliases: [bmunmuteall]
+    aliases: [ bmunmuteall ]
     permission: bm.command.unmuteall
   nlkick:
     description: "kick a player without logging"
     usage: "/nlkick <player> <reason>"
-    aliases: [bmnlkick]
+    aliases: [ bmnlkick ]
     permission: bm.command.nlkick
   bmreload:
     description: "Reloads from the config everything except database connection info"
@@ -146,17 +156,17 @@ commands:
   warn:
     description: "Warn a player"
     usage: "/warn <player> <reason>"
-    aliases: [bmwarn]
+    aliases: [ bmwarn ]
     permission: bm.command.warn
   tempwarn:
     description: "Temporarily warn a player"
     usage: "/tempwarn <player> <timeDiff> <reason>"
-    aliases: [bmtempwarn]
+    aliases: [ bmtempwarn ]
     permission: bm.command.tempwarn
   alts:
     description: "Find alts"
     usage: "/alts <player || ip>"
-    aliases: [bmalts]
+    aliases: [ bmalts ]
     permission: bm.command.alts
   bmclear:
     description: "Clear a player's records"
@@ -165,7 +175,7 @@ commands:
   dwarn:
     description: "Delete a player's last warning"
     usage: "/dwarn <player>"
-    aliases: [bmdwarn]
+    aliases: [ bmdwarn ]
     permission: bm.command.dwarn
   bmsync:
     description: "Forces synchronisation from database"
@@ -178,7 +188,7 @@ commands:
   addnoteall:
     description: "Add a note for a player across multiple servers"
     usage: "/addnoteall <player> <message>"
-    aliases: [bmaddnotell]
+    aliases: [ bmaddnotell ]
     permission: bm.command.addnoteall
   notes:
     description: "View private notes attached to a player"
@@ -215,17 +225,17 @@ commands:
   report:
     description: "report a player"
     usage: "/report <player> <reason>"
-    aliases: [bmreport]
+    aliases: [ bmreport ]
     permission: bm.command.report
   reports:
     description: "report management"
     usage: "/reports <sub command> <args>"
-    aliases: [bmreports]
+    aliases: [ bmreports ]
     permission: bm.command.reports
   reasons:
     description: List all available predefined reasons
     usage: "/reasons"
-    alias: [bmreasons]
+    alias: [ bmreasons ]
     permission: bm.command.reasons
   bmrollback:
     description: Rollback malicious actions
@@ -234,17 +244,17 @@ commands:
   banname:
     description: "Ban a player by name"
     usage: "/banname <name> <reason>"
-    alias: [bmbanname]
+    alias: [ bmbanname ]
     permission: bm.command.banname
   tempbanname:
     description: "Temporarily ban a player by name"
     usage: "/tempbanname <name> <timeDiff> <reason>"
-    alias: [bmtempbanname]
+    alias: [ bmtempbanname ]
     permission: bm.command.tempbanname
   unbanname:
     description: "Unban a name"
     usage: "/unbanname <name> [reason]"
-    alias: [bmunbanname]
+    alias: [ bmunbanname ]
     permission: bm.command.unbanname
   bmutils:
     description: "BanManager utility commands"
@@ -490,8 +500,8 @@ permissions:
     description: Allows you to see other players information
     default: op
   bm.command.bminfo.playerstats:
-   description: Allows you to see player statistics
-   default: op
+    description: Allows you to see player statistics
+    default: op
   bm.command.bminfo.ipstats:
     description: Allows you to see ip statistics
     default: op
