@@ -158,7 +158,7 @@ public class DateUtils {
             sb.append(month).append(" ").append(convertSu(month, "месяц", "месяца", "месяцев")).append(week > 0 || day > 0 || hour > 0 || min > 0 || sec > 0 ? " " : "");
         }
         if (week > 0) {
-            sb.append(week).append(" ").append(convertSu(week, "неделю", "недели", "недель")).append(day > 0 || hour > 0 || min > 0 || sec > 0 ? " " : "");
+            sb.append(week).append(" ").append(convertSu(week, "неделя", "недели", "недель")).append(day > 0 || hour > 0 || min > 0 || sec > 0 ? " " : "");
         }
         if (day > 0) {
             sb.append(day).append(" ").append(convertSu(day, "день", "дня", "дней")).append(hour > 0 || min > 0 || sec > 0 ? " " : "");
@@ -167,10 +167,10 @@ public class DateUtils {
             sb.append(hour).append(" ").append(convertSu(hour, "час", "часа", "часов")).append(min > 0 || sec > 0 ? " " : "");
         }
         if (min > 0) {
-            sb.append(min).append(" ").append(convertSu(min, "минуту", "минуты", "минут")).append(sec > 0 ? " " : "");
+            sb.append(min).append(" ").append(convertSu(min, "минута", "минуты", "минут")).append(sec > 0 ? " " : "");
         }
         if (sec > 0) {
-            sb.append(sec).append(" ").append(convertSu(sec, "секунду", "секунды", "секунд"));
+            sb.append(sec).append(" ").append(convertSu(sec, "секунда", "секунды", "секунд"));
         }
         return sb.toString();
 
