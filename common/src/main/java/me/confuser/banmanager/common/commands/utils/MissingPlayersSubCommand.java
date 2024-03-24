@@ -22,6 +22,7 @@ public class MissingPlayersSubCommand extends CommonSubCommand {
 
     {
       add("playerBans");
+      add("playerABans");
       add("playerKicks");
       add("playerMutes");
       add("playerNotes");

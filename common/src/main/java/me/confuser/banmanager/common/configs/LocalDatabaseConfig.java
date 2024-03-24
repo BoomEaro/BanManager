@@ -12,7 +12,10 @@ public class LocalDatabaseConfig extends DatabaseConfig {
     put("players", PlayerData.class);
 
     put("playerBans", PlayerBanData.class);
+    put("playerABans", PlayerBanData.class);
+
     put("playerBanRecords", PlayerBanRecord.class);
+    put("playerABanRecords", PlayerBanRecord.class);
 
     put("playerMutes", PlayerMuteData.class);
     put("playerMuteRecords", PlayerMuteRecord.class);

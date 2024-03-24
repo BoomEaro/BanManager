@@ -48,13 +48,13 @@ public class ABanCommand extends CommonCommand {
 
     if (isUUID) {
       try {
-        isBanned = getPlugin().getPlayerBanStorage().isBanned(UUID.fromString(playerName));
+        isBanned = getPlugin().getPlayerABanStorage().isBanned(UUID.fromString(playerName));
       } catch (IllegalArgumentException e) {
         sender.sendMessage(Message.get("sender.error.notFound").set("player", playerName).toString());
         return true;
       }
     } else {
-      isBanned = getPlugin().getPlayerBanStorage().isBanned(playerName);
+      isBanned = getPlugin().getPlayerABanStorage().isBanned(playerName);
     }
 
     if (isBanned && !sender.hasPermission("bm.command.aban.override")) {
@@ -97,7 +97,7 @@ public class ABanCommand extends CommonCommand {
       }
 
       try {
-        if (getPlugin().getPlayerBanStorage().isRecentlyBanned(player, getCooldown())) {
+        if (getPlugin().getPlayerABanStorage().isRecentlyBanned(player, getCooldown())) {
           Message.get("aban.error.cooldown").sendTo(sender);
           return;
         }
@@ -115,14 +115,14 @@ public class ABanCommand extends CommonCommand {
         PlayerBanData ban;
 
         if (isUUID) {
-          ban = getPlugin().getPlayerBanStorage().getBan(UUID.fromString(playerName));
+          ban = getPlugin().getPlayerABanStorage().getBan(UUID.fromString(playerName));
         } else {
-          ban = getPlugin().getPlayerBanStorage().getBan(playerName);
+          ban = getPlugin().getPlayerABanStorage().getBan(playerName);
         }
 
         if (ban != null) {
           try {
-            getPlugin().getPlayerBanStorage().unban(ban, actor);
+            getPlugin().getPlayerABanStorage().unban(ban, actor);
           } catch (SQLException e) {
             sender.sendMessage(Message.get("sender.error.exception").toString());
             e.printStackTrace();
@@ -135,7 +135,7 @@ public class ABanCommand extends CommonCommand {
       boolean created;
 
       try {
-        created = getPlugin().getPlayerBanStorage().ban(ban);
+        created = getPlugin().getPlayerABanStorage().ban(ban);
       } catch (SQLException e) {
         handlePunishmentCreateException(e, sender, Message.get("aban.error.exists").set("player",
                 playerName));

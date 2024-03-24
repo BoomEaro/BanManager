@@ -175,6 +175,10 @@ public class AdvancedBan implements IConverter {
   }
 
   @Override
+  public void importPlayerABans() {
+  }
+
+  @Override
   public void importPlayerMutes() {
   }
 

@@ -73,7 +73,11 @@ public class BanManagerPlugin {
   @Getter
   private PlayerBanStorage playerBanStorage;
   @Getter
+  private PlayerABanStorage playerABanStorage;
+  @Getter
   private PlayerBanRecordStorage playerBanRecordStorage;
+  @Getter
+  private PlayerABanRecordStorage playerABanRecordStorage;
   @Getter
   private PlayerKickStorage playerKickStorage;
   @Getter
@@ -352,7 +356,9 @@ public class BanManagerPlugin {
 
     playerStorage = new PlayerStorage(this);
     playerBanStorage = new PlayerBanStorage(this);
+    playerABanStorage = new PlayerABanStorage(this);
     playerBanRecordStorage = new PlayerBanRecordStorage(this);
+    playerABanRecordStorage = new PlayerABanRecordStorage(this);
     playerMuteStorage = new PlayerMuteStorage(this);
     playerMuteRecordStorage = new PlayerMuteRecordStorage(this);
     playerWarnStorage = new PlayerWarnStorage(this);

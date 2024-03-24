@@ -17,7 +17,9 @@ databases:
     tables:
       players: bm_players
       playerBans: bm_player_bans
+      playerABans: bm_player_abans
       playerBanRecords: bm_player_ban_records
+      playerABanRecords: bm_player_aban_records
       playerMutes: bm_player_mutes
       playerMuteRecords: bm_player_mute_records
       playerKicks: bm_player_kicks

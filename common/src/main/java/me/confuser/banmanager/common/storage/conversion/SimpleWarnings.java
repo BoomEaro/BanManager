@@ -114,6 +114,10 @@ public class SimpleWarnings implements IConverter {
   }
 
   @Override
+  public void importPlayerABans() {
+  }
+
+  @Override
   public void importIpBans() {
   }
 

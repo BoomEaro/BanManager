@@ -37,13 +37,13 @@ public class AUnbanCommand extends CommonCommand {
 
     if (isUUID) {
       try {
-        isBanned = getPlugin().getPlayerBanStorage().isBanned(UUID.fromString(playerName));
+        isBanned = getPlugin().getPlayerABanStorage().isBanned(UUID.fromString(playerName));
       } catch (IllegalArgumentException e) {
         sender.sendMessage(Message.get("sender.error.notFound").set("player", playerName).toString());
         return true;
       }
     } else {
-      isBanned = getPlugin().getPlayerBanStorage().isBanned(playerName);
+      isBanned = getPlugin().getPlayerABanStorage().isBanned(playerName);
     }
 
     if (!isBanned) {
@@ -60,9 +60,9 @@ public class AUnbanCommand extends CommonCommand {
       PlayerBanData ban;
 
       if (isUUID) {
-        ban = getPlugin().getPlayerBanStorage().getBan(UUID.fromString(playerName));
+        ban = getPlugin().getPlayerABanStorage().getBan(UUID.fromString(playerName));
       } else {
-        ban = getPlugin().getPlayerBanStorage().getBan(playerName);
+        ban = getPlugin().getPlayerABanStorage().getBan(playerName);
       }
 
       if (ban == null) {
@@ -82,7 +82,7 @@ public class AUnbanCommand extends CommonCommand {
       boolean unbanned;
 
       try {
-        unbanned = getPlugin().getPlayerBanStorage().unban(ban, actor, reason, isDelete);
+        unbanned = getPlugin().getPlayerABanStorage().unban(ban, actor, reason, isDelete);
       } catch (SQLException e) {
         sender.sendMessage(Message.get("sender.error.exception").toString());
         e.printStackTrace();

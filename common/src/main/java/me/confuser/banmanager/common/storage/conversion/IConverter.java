@@ -4,6 +4,8 @@ public interface IConverter {
 
   void importPlayerBans();
 
+  void importPlayerABans();
+
   void importPlayerMutes();
 
   void importPlayerWarnings();

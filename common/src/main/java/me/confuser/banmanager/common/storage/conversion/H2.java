@@ -18,7 +18,9 @@ import java.util.Map;
 public class H2 implements IConverter {
   private BanManagerPlugin plugin;
   private PlayerBanStorage playerBanStorage;
+  private PlayerABanStorage playerABanStorage;
   private PlayerBanRecordStorage playerBanRecordStorage;
+  private PlayerABanRecordStorage playerABanRecordStorage;
   private PlayerKickStorage playerKickStorage;
   private PlayerMuteStorage playerMuteStorage;
   private PlayerMuteRecordStorage playerMuteRecordStorage;
@@ -67,7 +69,9 @@ public class H2 implements IConverter {
       // Setup data storage
       playerStorage = new PlayerStorage(connection, config.getTable("players"));
       playerBanStorage = new PlayerBanStorage(connection, config.getTable("playerBans"));
+      playerABanStorage = new PlayerABanStorage(connection, config.getTable("playerABans"));
       playerBanRecordStorage = new PlayerBanRecordStorage(connection, config.getTable("playerBanRecords"));
+      playerABanRecordStorage = new PlayerABanRecordStorage(connection, config.getTable("playerABanRecords"));
       playerMuteStorage = new PlayerMuteStorage(connection, config.getTable("playerMutes"));
       playerMuteRecordStorage = new PlayerMuteRecordStorage(connection, config.getTable("playerMuteRecords"));
       playerWarnStorage = new PlayerWarnStorage(connection, config.getTable("playerWarnings"));
@@ -96,6 +100,7 @@ public class H2 implements IConverter {
 
     importPlayers();
     importPlayerBans();
+    importPlayerABans();
     importPlayerMutes();
     importPlayerWarnings();
     importPlayerKicks();
@@ -170,6 +175,47 @@ public class H2 implements IConverter {
     }
 
     plugin.getLogger().info("Finished importing player ban records");
+  }
+
+  @Override
+  public void importPlayerABans() {
+    plugin.getLogger().info("Importing player abans");
+
+    try (CloseableIterator<PlayerBanData> itr = playerABanStorage.closeableIterator()) {
+      while (itr.hasNext()) {
+        PlayerBanData data = itr.next();
+
+        try {
+          plugin.getPlayerABanStorage().createIfNotExists(data);
+        } catch (SQLException e) {
+          e.printStackTrace();
+          plugin.getLogger().severe("Failed to import player aban " + data.getPlayer().getUUID());
+        }
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    plugin.getLogger().info("Finished importing player abans");
+
+    plugin.getLogger().info("Importing player aban records");
+
+    try (CloseableIterator<PlayerBanRecord> itr = playerABanRecordStorage.closeableIterator()) {
+      while (itr.hasNext()) {
+        PlayerBanRecord data = itr.next();
+
+        try {
+          plugin.getPlayerABanRecordStorage().createIfNotExists(data);
+        } catch (SQLException e) {
+          e.printStackTrace();
+          plugin.getLogger().severe("Failed to import player aban record " + data.getId());
+        }
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    plugin.getLogger().info("Finished importing player aban records");
   }
 
   @Override
