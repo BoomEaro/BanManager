@@ -16,12 +16,12 @@ api-version: 1.13
 commands:
   ban:
     description: "ban a player"
-    usage: "/ban <player> <reason>"
+    usage: "§c[§c§lНАКАЗАНИЯ§c] ►§f Забанить игрока навсегда: §e/ban (ник) (причина)"
     aliases: [ bmban ]
     permission: bm.command.ban
   aban:
     description: "aban a player"
-    usage: "/aban <player> <reason>"
+    usage: "§c[§c§lНАКАЗАНИЯ§c] ►§f Забанить игрока навсегда без возможности покупки разбана: §e/aban (ник) (причина)"
     aliases: [ bmaban ]
     permission: bm.command.aban
   banall:
@@ -31,7 +31,7 @@ commands:
     permission: bm.command.banall
   tempban:
     description: "tempban a player"
-    usage: "/tempban <player> <timeDiff> <reason>"
+    usage: "§c[§c§lНАКАЗАНИЯ§c] ►§f Забанить временно игрока: §e/tempban (ник) (время) (причина)"
     aliases: [ bmtempban ]
     permission: bm.command.tempban
   tempbanall:
@@ -41,12 +41,12 @@ commands:
     permission: bm.command.tempbanall
   unban:
     description: "unban a player"
-    usage: "/unban <player> [reason]"
+    usage: "§c[§c§lНАКАЗАНИЯ§c] ►§f Разбанить игрока: §e/unban (ник) (причина)"
     aliases: [ bmunban, pardon ]
     permission: bm.command.unban
   aunban:
     description: "aunban a player"
-    usage: "/aunban <player> [reason]"
+    usage: "§c[§c§lНАКАЗАНИЯ§c] ►§f Разбанить игрока которого забанили без возможности покупки разбана: §e/aunban (ник) (причина)"
     aliases: [ bmunaban, apardon ]
     permission: bm.command.aunban
   unbanall:
@@ -56,7 +56,7 @@ commands:
     permission: bm.command.unbanall
   bminfo:
     description: "see information on a player"
-    usage: "/bminfo <player> [index]"
+    usage: "§c[§c§lНАКАЗАНИЯ§c] ►§f Посмотреть информацию о игроке: §e/bminfo (ник)"
     aliases: [ bmbminfo ]
     permission: bm.command.bminfo
   banip:
@@ -96,12 +96,12 @@ commands:
     permission: bm.command.import
   kick:
     description: "kick a player"
-    usage: "/kick <player> <reason>"
+    usage: "§c[§c§lНАКАЗАНИЯ§c] ►§f Кикнуть игрока: §e/kick (ник) (причина)"
     aliases: [ bmkick ]
     permission: bm.command.kick
   mute:
     description: "mutes a player"
-    usage: "/mute <player> <reason>"
+    usage: "§c[§c§lНАКАЗАНИЯ§c] ►§f Замутить игрока навсегда: §e/mute (ник) (причина)"
     aliases: [ bmmute ]
     permission: bm.command.mute
   muteip:
@@ -116,7 +116,7 @@ commands:
     permission: bm.command.muteall
   tempmute:
     description: "temp mutes a player"
-    usage: "/tempmute <player> <timeDiff> <reason>"
+    usage: "§c[§c§lНАКАЗАНИЯ§c] ►§f Замутить временно игрока: §e/tempmute (ник) (время) (причина)"
     aliases: [ bmtempmute ]
     permission: bm.command.tempmute
   tempmuteip:
@@ -131,7 +131,7 @@ commands:
     permission: bm.command.tempmuteall
   unmute:
     description: "unmute a player"
-    usage: "/unmute <player> [reason]"
+    usage: "§c[§c§lНАКАЗАНИЯ§c] ►§f Размутить игрока: §e/unmute (ник) (причина)"
     aliases: [ bmunmute ]
     permission: bm.command.unmute
   unmuteip:
@@ -165,7 +165,7 @@ commands:
     permission: bm.command.tempwarn
   alts:
     description: "Find alts"
-    usage: "/alts <player || ip>"
+    usage: "§fПосмотреть твинки игрока: §e/alts (ник)"
     aliases: [ bmalts ]
     permission: bm.command.alts
   bmclear:
