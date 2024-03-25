@@ -180,7 +180,7 @@ public class PlayerABanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
   public void addBan(PlayerBanData ban) {
     bans.put(ban.getPlayer().getUUID(), ban);
 
-    plugin.getServer().callEvent("PlayerBannedEvent", ban, ban.isSilent() || !plugin.getConfig().isBroadcastOnSync());
+    plugin.getServer().callEvent("PlayerABannedEvent", ban, ban.isSilent() || !plugin.getConfig().isBroadcastOnSync());
   }
 
   public void removeBan(PlayerBanData ban) {
@@ -202,7 +202,7 @@ public class PlayerABanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
   }
 
   public boolean ban(PlayerBanData ban) throws SQLException {
-    CommonEvent event = plugin.getServer().callEvent("PlayerBanEvent", ban, ban.isSilent());
+    CommonEvent event = plugin.getServer().callEvent("PlayerABanEvent", ban, ban.isSilent());
 
     if (event.isCancelled()) {
       return false;
@@ -211,7 +211,7 @@ public class PlayerABanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
     create(ban);
     bans.put(ban.getPlayer().getUUID(), ban);
 
-    plugin.getServer().callEvent("PlayerBannedEvent", ban, event.isSilent());
+    plugin.getServer().callEvent("PlayerABannedEvent", ban, event.isSilent());
 
     return true;
   }
@@ -225,7 +225,7 @@ public class PlayerABanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
   }
 
   public boolean unban(PlayerBanData ban, PlayerData actor, String reason, boolean delete) throws SQLException {
-    CommonEvent event = plugin.getServer().callEvent("PlayerUnbanEvent", ban, actor, reason);
+    CommonEvent event = plugin.getServer().callEvent("PlayerAUnbanEvent", ban, actor, reason);
 
     if (event.isCancelled()) {
       return false;

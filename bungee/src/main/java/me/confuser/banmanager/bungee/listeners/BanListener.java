@@ -1,10 +1,7 @@
 package me.confuser.banmanager.bungee.listeners;
 
 
-import me.confuser.banmanager.bungee.api.events.IpBannedEvent;
-import me.confuser.banmanager.bungee.api.events.IpRangeBannedEvent;
-import me.confuser.banmanager.bungee.api.events.NameBannedEvent;
-import me.confuser.banmanager.bungee.api.events.PlayerBannedEvent;
+import me.confuser.banmanager.bungee.api.events.*;
 import me.confuser.banmanager.common.BanManagerPlugin;
 import me.confuser.banmanager.common.listeners.CommonBanListener;
 import net.md_5.bungee.api.plugin.Listener;
@@ -22,6 +19,11 @@ public class BanListener implements Listener {
   @EventHandler(priority = EventPriority.HIGHEST)
   public void notifyOnBan(PlayerBannedEvent event) {
     listener.notifyOnBan(event.getBan(), event.isSilent());
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void notifyOnABan(PlayerABannedEvent event) {
+    listener.notifyOnABan(event.getBan(), event.isSilent());
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)

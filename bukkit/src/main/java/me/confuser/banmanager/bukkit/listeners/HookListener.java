@@ -25,10 +25,23 @@ public class HookListener implements Listener {
   }
 
   @EventHandler(priority = EventPriority.MONITOR)
+  public void onABan(final PlayerABanEvent event) {
+    listener.onBan(event.getBan(), true);
+  }
+
+  @EventHandler(priority = EventPriority.MONITOR)
+  public void onABan(final PlayerABannedEvent event) {
+    listener.onBan(event.getBan(), false);
+  }
+
+  @EventHandler(priority = EventPriority.MONITOR)
   public void onUnban(final PlayerUnbanEvent event) {
     listener.onUnban(event.getBan(), event.getActor(), event.getReason());
   }
-
+  @EventHandler(priority = EventPriority.MONITOR)
+  public void onAUnban(final PlayerAUnbanEvent event) {
+    listener.onUnban(event.getBan(), event.getActor(), event.getReason());
+  }
   @EventHandler(priority = EventPriority.MONITOR)
   public void onMute(final PlayerMuteEvent event) {
     listener.onMute(event.getMute(), true);

@@ -113,13 +113,21 @@ public class BungeeServer implements CommonServer {
       case "PlayerBanEvent":
         event = new PlayerBanEvent((PlayerBanData) args[0], (boolean) args[1]);
         break;
+      case "PlayerABanEvent":
+        event = new PlayerABanEvent((PlayerBanData) args[0], (boolean) args[1]);
+        break;
       case "PlayerBannedEvent":
         event = new PlayerBannedEvent((PlayerBanData) args[0], (boolean) args[1]);
+        break;
+      case "PlayerABannedEvent":
+        event = new PlayerABannedEvent((PlayerBanData) args[0], (boolean) args[1]);
         break;
       case "PlayerUnbanEvent":
         event = new PlayerUnbanEvent((PlayerBanData) args[0], (PlayerData) args[1], (String) args[2]);
         break;
-
+      case "PlayerAUnbanEvent":
+        event = new PlayerAUnbanEvent((PlayerBanData) args[0], (PlayerData) args[1], (String) args[2]);
+        break;
       case "IpBanEvent":
         event = new IpBanEvent((IpBanData) args[0], (boolean) args[1]);
         break;
