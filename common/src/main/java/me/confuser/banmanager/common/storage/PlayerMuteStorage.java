@@ -1,7 +1,10 @@
 package me.confuser.banmanager.common.storage;
 
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import me.confuser.banmanager.common.BanManagerPlugin;
 import me.confuser.banmanager.common.api.events.CommonEvent;
+import me.confuser.banmanager.common.configs.AdvancedCooldownsConfig;
 import me.confuser.banmanager.common.data.PlayerData;
 import me.confuser.banmanager.common.data.PlayerMuteData;
 import me.confuser.banmanager.common.ipaddr.AddressValueException;
@@ -24,11 +27,14 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class PlayerMuteStorage extends BaseDaoImpl<PlayerMuteData, Integer> {
 
   private BanManagerPlugin plugin;
   private ConcurrentHashMap<UUID, PlayerMuteData> mutes = new ConcurrentHashMap<>();
+
+  private final ConcurrentMap<String, CooldownPlayer> advancedCooldowns = new ConcurrentHashMap<>();
 
   public PlayerMuteStorage(BanManagerPlugin plugin) throws SQLException {
     super(plugin.getLocalConn(), (DatabaseTableConfig<PlayerMuteData>) plugin.getConfig()
@@ -279,5 +285,59 @@ public class PlayerMuteStorage extends BaseDaoImpl<PlayerMuteData, Integer> {
         .eq("player_id", player).and()
         .ge("created", (System.currentTimeMillis() / 1000L) - cooldown)
         .countOf() > 0;
+  }
+
+  public boolean isOnAdvancedCooldown(String sender, AdvancedCooldownsConfig.GroupCooldown groupCooldown) {
+    CooldownPlayer cooldownPlayer = getCooldownPlayer(sender);
+
+    AdvancedCooldownsConfig.Cooldown cooldown = groupCooldown.getCooldown();
+
+    Long playerCooldown = cooldownPlayer.getCooldown();
+    if (playerCooldown != null) {
+      if ((System.currentTimeMillis() - playerCooldown) > cooldown.getCooldown()) {
+        cooldownPlayer.setCooldown(null);
+        cooldownPlayer.setCount(0);
+        cooldownPlayer.setLastTime(System.currentTimeMillis());
+        return false;
+      }
+
+      return true;
+    }
+
+    if ((System.currentTimeMillis() - cooldownPlayer.getLastTime()) > cooldown.getTime()) {
+      cooldownPlayer.setCount(0);
+      cooldownPlayer.setLastTime(System.currentTimeMillis());
+    }
+
+    if (cooldownPlayer.getCount() >= cooldown.getThreshold()) {
+      cooldownPlayer.setCooldown(System.currentTimeMillis());
+      return true;
+    }
+
+    return false;
+  }
+
+  public void addAdvancedCooldown(String sender) {
+    CooldownPlayer cooldownPlayer = getCooldownPlayer(sender);
+    cooldownPlayer.addCount();
+  }
+
+  private CooldownPlayer getCooldownPlayer(String name) {
+    return this.advancedCooldowns.computeIfAbsent(name, CooldownPlayer::new);
+  }
+
+  @RequiredArgsConstructor
+  @Data
+  private static class CooldownPlayer {
+    private final String name;
+
+    private long lastTime = System.currentTimeMillis();
+    private int count = 0;
+
+    private Long cooldown = null;
+
+    public void addCount() {
+      this.count++;
+    }
   }
 }

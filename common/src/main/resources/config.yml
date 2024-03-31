@@ -127,6 +127,16 @@ cooldowns:
   warn: 10
   tempwarn: 10
   report: 10
+advancedCooldowns:
+  mute:
+    default:
+      threshold: 3
+      time: 120000
+      cooldown: 120000
+    admin:
+      threshold: 3
+      time: 120000
+      cooldown: 120000
 
 # Commands to execute when a player reaches a certain number of warning points
 warningActions:

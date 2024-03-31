@@ -4,6 +4,8 @@ version: "${internalVersion}"
 author: confuser
 website: http://dev.bukkit.org/bukkit-plugins/ban-management/
 description: "A database driven punishment system"
+depend:
+  - LuckPerms
 softdepend:
   - DiscordSRV
   - PlaceholderAPI

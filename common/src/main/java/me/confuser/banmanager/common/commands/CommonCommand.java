@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public abstract class CommonCommand {
 
   @Getter
-  private BanManagerPlugin plugin;
+  protected BanManagerPlugin plugin;
   @Getter
   private final String usage;
   @Getter

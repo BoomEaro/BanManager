@@ -49,6 +49,8 @@ signing {
 dependencies {
     api(project(":BanManagerLibs"))
 
+    compileOnly("net.luckperms:api:5.4")
+
     testImplementation("junit:junit:4.13")
     testImplementation("org.hamcrest:hamcrest-library:1.2.1")
     testImplementation("org.powermock:powermock-module-junit4:2.0.2")

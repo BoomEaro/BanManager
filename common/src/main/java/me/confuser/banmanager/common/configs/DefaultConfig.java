@@ -77,6 +77,8 @@ public class DefaultConfig extends Config {
   private UUIDFetcher uuidFetcher;
   @Getter
   private String geyserPrefix;
+  @Getter
+  private AdvancedCooldownsConfig advancedCooldownsConfig;
 
   public DefaultConfig(File dataFolder, CommonLogger logger) {
     super(dataFolder, "config.yml", logger);
@@ -140,6 +142,8 @@ public class DefaultConfig extends Config {
     uuidFetcher = new UUIDFetcher(idToName, nameToId);
 
     geyserPrefix = conf.getString("geyserPrefix", "");
+
+    this.advancedCooldownsConfig = new AdvancedCooldownsConfig(conf.getConfigurationSection("advancedCooldowns"));
   }
 
   public void handleBlockedCommands(BanManagerPlugin plugin, HashSet<String> set) {
@@ -217,5 +221,6 @@ public class DefaultConfig extends Config {
   public boolean isSoftBlockedCommand(String cmd) {
     return softMutedBlacklistCommands.contains(cmd);
   }
+
 
 }

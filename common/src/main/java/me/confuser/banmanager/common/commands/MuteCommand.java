@@ -2,9 +2,13 @@ package me.confuser.banmanager.common.commands;
 
 import me.confuser.banmanager.common.BanManagerPlugin;
 import me.confuser.banmanager.common.CommonPlayer;
+import me.confuser.banmanager.common.configs.AdvancedCooldownsConfig;
 import me.confuser.banmanager.common.data.PlayerData;
 import me.confuser.banmanager.common.data.PlayerMuteData;
 import me.confuser.banmanager.common.util.Message;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.model.user.UserManager;
 
 import java.sql.SQLException;
 import java.util.UUID;
@@ -104,16 +108,20 @@ public class MuteCommand extends CommonCommand {
         return;
       }
 
-      try {
-        if (getPlugin().getPlayerMuteStorage().isRecentlyMuted(player, getCooldown())) {
-          Message.get("mute.error.cooldown").sendTo(sender);
-          return;
-        }
-      } catch (SQLException e) {
-        sender.sendMessage(Message.get("sender.error.exception").toString());
-        e.printStackTrace();
+      UserManager userManager = LuckPermsProvider.get().getUserManager();
+      UUID senderUUID = sender.getData().getUUID();
+      User user = userManager.getUser(senderUUID);
+      if (user == null) {
+         user = userManager.loadUser(senderUUID).join();
+      }
+
+      AdvancedCooldownsConfig.GroupCooldown groupCooldown = plugin.getConfig().getAdvancedCooldownsConfig().getCommand(getCommandName(), user.getPrimaryGroup());
+      if (getPlugin().getPlayerMuteStorage().isOnAdvancedCooldown(sender.getName(), groupCooldown)) {
+        Message.get("mute.error.cooldown").sendTo(sender);
         return;
       }
+
+      getPlugin().getPlayerMuteStorage().addAdvancedCooldown(sender.getName());
 
       PlayerData actor = sender.getData();
 

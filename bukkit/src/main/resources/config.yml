@@ -20,6 +20,8 @@ databases:
       playerABans: bm_player_abans
       playerBanRecords: bm_player_ban_records
       playerABanRecords: bm_player_aban_records
+      playerMutes: bm_player_mutes
+      playerMuteRecords: bm_player_mute_records
       playerKicks: bm_player_kicks
       playerNotes: bm_player_notes
       playerHistory: bm_player_history
@@ -125,6 +127,16 @@ cooldowns:
   warn: 10
   tempwarn: 10
   report: 10
+advancedCooldowns:
+  mute:
+    default:
+      threshold: 3
+      time: 120000
+      cooldown: 120000
+    admin:
+      threshold: 3
+      time: 120000
+      cooldown: 120000
 
 # Commands to execute when a player reaches a certain number of warning points
 warningActions:
