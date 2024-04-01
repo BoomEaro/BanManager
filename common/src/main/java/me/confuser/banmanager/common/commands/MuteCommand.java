@@ -5,6 +5,7 @@ import me.confuser.banmanager.common.CommonPlayer;
 import me.confuser.banmanager.common.configs.AdvancedCooldownsConfig;
 import me.confuser.banmanager.common.data.PlayerData;
 import me.confuser.banmanager.common.data.PlayerMuteData;
+import me.confuser.banmanager.common.util.LuckPermsUtils;
 import me.confuser.banmanager.common.util.Message;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
@@ -108,12 +109,7 @@ public class MuteCommand extends CommonCommand {
         return;
       }
 
-      UserManager userManager = LuckPermsProvider.get().getUserManager();
-      UUID senderUUID = sender.getData().getUUID();
-      User user = userManager.getUser(senderUUID);
-      if (user == null) {
-         user = userManager.loadUser(senderUUID).join();
-      }
+      User user = LuckPermsUtils.getOrLoadUser(sender.getData().getUUID());
 
       AdvancedCooldownsConfig.GroupCooldown groupCooldown = plugin.getConfig().getAdvancedCooldownsConfig().getCommand(getCommandName(), user.getPrimaryGroup());
       if (getPlugin().getPlayerMuteStorage().isOnAdvancedCooldown(sender.getName(), groupCooldown)) {
