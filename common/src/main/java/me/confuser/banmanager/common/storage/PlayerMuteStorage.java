@@ -287,21 +287,22 @@ public class PlayerMuteStorage extends BaseDaoImpl<PlayerMuteData, Integer> {
         .countOf() > 0;
   }
 
-  public boolean isOnAdvancedCooldown(String sender, AdvancedCooldownsConfig.GroupCooldown groupCooldown) {
+  public Long getAdvancedCooldown(String sender, AdvancedCooldownsConfig.GroupCooldown groupCooldown) {
     CooldownPlayer cooldownPlayer = getCooldownPlayer(sender);
 
     AdvancedCooldownsConfig.Cooldown cooldown = groupCooldown.getCooldown();
 
     Long playerCooldown = cooldownPlayer.getCooldown();
     if (playerCooldown != null) {
-      if ((System.currentTimeMillis() - playerCooldown) > cooldown.getCooldown()) {
+      long currentCooldown = System.currentTimeMillis() - playerCooldown;
+      if (currentCooldown > cooldown.getCooldown()) {
         cooldownPlayer.setCooldown(null);
         cooldownPlayer.setCount(0);
         cooldownPlayer.setLastTime(System.currentTimeMillis());
-        return false;
+        return null;
       }
 
-      return true;
+      return cooldown.getCooldown() - currentCooldown;
     }
 
     if ((System.currentTimeMillis() - cooldownPlayer.getLastTime()) > cooldown.getTime()) {
@@ -311,10 +312,12 @@ public class PlayerMuteStorage extends BaseDaoImpl<PlayerMuteData, Integer> {
 
     if (cooldownPlayer.getCount() >= cooldown.getThreshold()) {
       cooldownPlayer.setCooldown(System.currentTimeMillis());
-      return true;
+
+      long currentCooldown = System.currentTimeMillis() - cooldownPlayer.getCooldown();
+      return cooldown.getCooldown() - currentCooldown;
     }
 
-    return false;
+    return null;
   }
 
   public void addAdvancedCooldown(String sender) {

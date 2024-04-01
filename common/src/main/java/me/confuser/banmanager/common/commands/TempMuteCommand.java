@@ -129,8 +129,9 @@ public class TempMuteCommand extends CommonCommand {
       User user = LuckPermsUtils.getOrLoadUser(sender.getData().getUUID());
 
       AdvancedCooldownsConfig.GroupCooldown groupCooldown = plugin.getConfig().getAdvancedCooldownsConfig().getCommand(getCommandName(), user.getPrimaryGroup());
-      if (getPlugin().getPlayerMuteStorage().isOnAdvancedCooldown(sender.getName(), groupCooldown)) {
-        Message.get("mute.error.cooldown").sendTo(sender);
+      Long cooldown = getPlugin().getPlayerMuteStorage().getAdvancedCooldown(sender.getName(), groupCooldown);
+      if (cooldown != null) {
+        Message.get("mute.error.advancedCooldown").set("time", cooldown / 1000).sendTo(sender);
         return;
       }
 

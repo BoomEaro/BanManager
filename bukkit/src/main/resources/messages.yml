@@ -187,6 +187,7 @@ messages:
     error:
       exists: '&c[player] is already muted'
       cooldown: '&cThis player was muted too recently, try again later'
+      advancedCooldown: '&cYou will be able to mute a player after [time] seconds'
 
   muteip:
     ip:
