@@ -131,9 +131,15 @@ public class BanCommand extends CommonCommand {
         }
       }
 
+      if (getPlugin().getPlayerBanStorage().isPaidUnbanned(player.getUUID())) {
+        if (!sender.hasPermission("bm.unbanpaid.prevent")) {
+          sender.sendMessage(Message.get("sender.error.exempt").set("player", playerName).toString());
+          return;
+        }
+      }
+
       final PlayerBanData ban = new PlayerBanData(player, actor, parser.getReason().getMessage(), isSilent);
       boolean created;
-
       try {
         created = getPlugin().getPlayerBanStorage().ban(ban);
       } catch (SQLException e) {

@@ -175,6 +175,12 @@ messages:
       noExists: '&c[player] is not abanned'
       notOwn: '&c[player] was not abanned by you, unable to unban'
 
+  unbanpaid:
+    notify: '&6[player] has been paid unbanned by [actor]'
+    error:
+      noExists: '&c[player] is not banned'
+      notOwn: '&c[player] was not banned by you, unable to paid unban'
+
   unbanall:
     notify: '&6[player] will be unbanned by [actor]'
 

@@ -44,6 +44,11 @@ commands:
     usage: "/unban <player> [reason]"
     aliases: [ bmunban, pardon ]
     permission: bm.command.unban
+  unbanpaid:
+    description: "unbanpaid a player"
+    usage: "/unbanpaid <player> [reason]"
+    aliases: [ bmunbanpaid, pardonpaid ]
+    permission: bm.command.unbanpaid
   aunban:
     description: "aunban a player"
     usage: "/aunban <player> [reason]"

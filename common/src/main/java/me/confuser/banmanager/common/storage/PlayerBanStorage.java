@@ -1,5 +1,6 @@
 package me.confuser.banmanager.common.storage;
 
+import lombok.Data;
 import me.confuser.banmanager.common.BanManagerPlugin;
 import me.confuser.banmanager.common.api.events.CommonEvent;
 import me.confuser.banmanager.common.data.PlayerBanData;
@@ -22,15 +23,19 @@ import me.confuser.banmanager.common.util.IPUtils;
 import me.confuser.banmanager.common.util.UUIDUtils;
 
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class PlayerBanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
 
   private BanManagerPlugin plugin;
-  private ConcurrentHashMap<UUID, PlayerBanData> bans = new ConcurrentHashMap<>();
+  private final ConcurrentMap<UUID, PlayerBanData> bans = new ConcurrentHashMap<>();
+  private final ConcurrentMap<UUID, PaidUnbanData> paidUnbans = new ConcurrentHashMap<>();
+
 
   public PlayerBanStorage(BanManagerPlugin plugin) throws SQLException {
     super(plugin.getLocalConn(), (DatabaseTableConfig<PlayerBanData>) plugin.getConfig().getLocalDb()
@@ -44,7 +49,7 @@ public class PlayerBanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
     } else {
       try {
         executeRawNoArgs("ALTER TABLE " + tableConfig.getTableName() + " ADD COLUMN `silent` TINYINT(1)");
-      } catch (SQLException e) {
+      } catch (SQLException ignored) {
       }
 
       try {
@@ -53,7 +58,7 @@ public class PlayerBanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
           + " CHANGE `updated` `updated` BIGINT UNSIGNED,"
           + " CHANGE `expires` `expires` BIGINT UNSIGNED"
         );
-      } catch (SQLException e) {
+      } catch (SQLException ignored) {
       }
     }
 
@@ -148,7 +153,7 @@ public class PlayerBanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
     }
   }
 
-  public ConcurrentHashMap<UUID, PlayerBanData> getBans() {
+  public ConcurrentMap<UUID, PlayerBanData> getBans() {
     return bans;
   }
 
@@ -220,6 +225,10 @@ public class PlayerBanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
   }
 
   public boolean unban(PlayerBanData ban, PlayerData actor, String reason, boolean delete) throws SQLException {
+    return unban(ban, actor, reason, delete, false);
+  }
+
+  public boolean unban(PlayerBanData ban, PlayerData actor, String reason, boolean delete, boolean paid) throws SQLException {
     CommonEvent event = plugin.getServer().callEvent("PlayerUnbanEvent", ban, actor, reason);
 
     if (event.isCancelled()) {
@@ -227,11 +236,34 @@ public class PlayerBanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
     }
 
     delete(ban);
-    bans.remove(ban.getPlayer().getUUID());
+    UUID uuid = ban.getPlayer().getUUID();
+    bans.remove(uuid);
+
+    if (paid) {
+      this.paidUnbans.put(uuid, new PaidUnbanData(uuid));
+    }
 
     if (!delete) plugin.getPlayerBanRecordStorage().addRecord(ban, actor, reason);
 
     return true;
+  }
+
+  public PaidUnbanData getPaidUnbanData(UUID uuid) {
+    return this.paidUnbans.get(uuid);
+  }
+
+  public boolean isPaidUnbanned(UUID uuid) {
+    PaidUnbanData paidUnbanData = this.paidUnbans.get(uuid);
+    if (paidUnbanData == null) {
+      return false;
+    }
+
+    Long time = paidUnbanData.getTimeAdded();
+    if (time == null) {
+      return false;
+    }
+
+    return System.currentTimeMillis() - time > Duration.ofMinutes(10).toMillis();
   }
 
   public CloseableIterator<PlayerBanData> findBans(long fromTime) throws SQLException {
@@ -300,5 +332,13 @@ public class PlayerBanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
         .eq("player_id", player).and()
         .ge("created", (System.currentTimeMillis() / 1000L) - cooldown)
         .countOf() > 0;
+  }
+
+  @Data
+  public static class PaidUnbanData {
+    private final UUID uuid;
+
+    private Long timeAdded;
+
   }
 }

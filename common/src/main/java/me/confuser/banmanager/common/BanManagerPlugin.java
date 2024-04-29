@@ -434,6 +434,7 @@ public class BanManagerPlugin {
         new TempNameBanCommand(this),
         new TempWarnCommand(this),
         new UnbanCommand(this),
+        new UnbanPaidCommand(this),
         new AUnbanCommand(this),
         new UnbanIpCommand(this),
         new UnbanIpRangeCommand(this),

@@ -9,6 +9,7 @@ import me.confuser.banmanager.common.google.guava.cache.CacheBuilder;
 import me.confuser.banmanager.common.ipaddr.IPAddress;
 import me.confuser.banmanager.common.maxmind.db.model.CountryResponse;
 import me.confuser.banmanager.common.ormlite.dao.CloseableIterator;
+import me.confuser.banmanager.common.storage.PlayerBanStorage;
 import me.confuser.banmanager.common.util.*;
 
 import java.io.IOException;
@@ -271,6 +272,14 @@ public class CommonJoinListener {
 
             handler.handlePlayerDeny(data.getPlayer(), message);
             handleJoinDeny(data.getPlayer(), data.getActor(), data.getReason());
+            return;
+        }
+
+        PlayerBanStorage.PaidUnbanData paidUnbanData = plugin.getPlayerBanStorage().getPaidUnbanData(id);
+        if (paidUnbanData != null) {
+            if (paidUnbanData.getTimeAdded() == null) {
+                paidUnbanData.setTimeAdded(System.currentTimeMillis());
+            }
         }
     }
 
