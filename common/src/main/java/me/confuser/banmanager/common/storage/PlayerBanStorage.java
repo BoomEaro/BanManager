@@ -263,7 +263,7 @@ public class PlayerBanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
       return false;
     }
 
-    return System.currentTimeMillis() - time > Duration.ofMinutes(10).toMillis();
+    return System.currentTimeMillis() - time <= Duration.ofMinutes(10).toMillis();
   }
 
   public CloseableIterator<PlayerBanData> findBans(long fromTime) throws SQLException {

@@ -133,7 +133,7 @@ public class BanCommand extends CommonCommand {
 
       if (getPlugin().getPlayerBanStorage().isPaidUnbanned(player.getUUID())) {
         if (!sender.hasPermission("bm.unbanpaid.prevent")) {
-          sender.sendMessage(Message.get("sender.error.exempt").set("player", playerName).toString());
+          sender.sendMessage(Message.get("sender.error.paidUnbanned").set("player", playerName).toString());
           return;
         }
       }
