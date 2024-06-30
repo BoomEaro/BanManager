@@ -8,14 +8,13 @@ import me.confuser.banmanager.common.ipaddr.IPAddress;
 import me.confuser.banmanager.common.ipaddr.IPAddressString;
 import me.confuser.banmanager.common.ormlite.field.DatabaseField;
 import me.confuser.banmanager.common.ormlite.table.DatabaseTable;
-import me.confuser.banmanager.common.storage.PlayerStorage;
 import me.confuser.banmanager.common.storage.mysql.ByteArray;
 import me.confuser.banmanager.common.storage.mysql.IpAddress;
 import me.confuser.banmanager.common.util.UUIDUtils;
 
 import java.util.UUID;
 
-@DatabaseTable(tableName = "players", daoClass = PlayerStorage.class)
+@DatabaseTable
 @ToString
 public class PlayerData {
 

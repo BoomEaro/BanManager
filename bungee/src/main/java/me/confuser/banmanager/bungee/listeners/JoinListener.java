@@ -11,7 +11,9 @@ import me.confuser.banmanager.common.listeners.CommonJoinListener;
 import me.confuser.banmanager.common.util.IPUtils;
 import me.confuser.banmanager.common.util.Message;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
@@ -54,11 +56,22 @@ public class JoinListener implements Listener {
                 }
 
                 listener.onJoin(new BungeePlayer(event.getPlayer(), plugin.getPlugin().getConfig().isOnlineMode()));
-            }
-            finally {
+            } finally {
                 event.completeIntent(plugin);
             }
         });
+    }
+
+    @EventHandler
+    public void onServerConnectedEvent(ServerConnectedEvent e) {
+        Server server = e.getServer();
+        if (server == null) {
+            return;
+        }
+
+        ProxiedPlayer player = e.getPlayer();
+
+        listener.onServerJoin(new BungeePlayer(player, plugin.getPlugin().getConfig().isOnlineMode()), player.getAddress().getAddress(), server.getInfo().getName());
     }
 
     @RequiredArgsConstructor

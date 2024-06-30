@@ -178,7 +178,7 @@ public class InfoCommand extends CommonCommand {
       if (sender.hasPermission("bm.command.bminfo.alts")) {
         messages.add(Message.getString("alts.header"));
 
-        List<PlayerData> duplicatePlayers = getPlugin().getPlayerStorage().getDuplicatesInTime(ip, getPlugin().getConfig().getTimeAssociatedAlts());
+        List<PlayerData> duplicatePlayers = getPlugin().getDuplicatePlayerStorage().getDuplicatesInTime(ip, getPlugin().getConfig().getTimeAssociatedAlts());
 
         if (!sender.isConsole()) {
           messages.add(FindAltsCommand.alts(duplicatePlayers));
@@ -454,7 +454,7 @@ public class InfoCommand extends CommonCommand {
       if (sender.hasPermission("bm.command.bminfo.alts")) {
         messages.add(Message.getString("alts.header"));
 
-        List<PlayerData> duplicatePlayers = getPlugin().getPlayerStorage().getDuplicatesInTime(player.getIp(), getPlugin().getConfig().getTimeAssociatedAlts());
+        List<PlayerData> duplicatePlayers = getPlugin().getDuplicatePlayerStorage().getDuplicatesInTime(player.getIp(), getPlugin().getConfig().getTimeAssociatedAlts());
 
         if (!sender.isConsole()) {
           messages.add(FindAltsCommand.alts(duplicatePlayers));

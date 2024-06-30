@@ -16,6 +16,7 @@ databases:
     connectionTimeout: 30000
     tables:
       players: bm_players
+      duplicatePlayers: bm_duplicate_players
       playerBans: bm_player_bans
       playerABans: bm_player_abans
       playerBanRecords: bm_player_ban_records
@@ -137,6 +138,9 @@ advancedCooldowns:
       threshold: 3
       time: 120000
       cooldown: 120000
+
+detectServerJoin:
+  - "lobby"
 
 # Commands to execute when a player reaches a certain number of warning points
 warningActions:

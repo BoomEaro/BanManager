@@ -10,6 +10,7 @@ public class LocalDatabaseConfig extends DatabaseConfig {
 
   public static HashMap<String, Class> types = new HashMap<String, Class>() {{
     put("players", PlayerData.class);
+    put("duplicatePlayers", PlayerData.class);
 
     put("playerBans", PlayerBanData.class);
     put("playerABans", PlayerBanData.class);

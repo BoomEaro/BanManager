@@ -5,6 +5,7 @@ import me.confuser.banmanager.bukkit.BukkitPlayer;
 import me.confuser.banmanager.bukkit.BukkitServer;
 import me.confuser.banmanager.common.BanManagerPlugin;
 import me.confuser.banmanager.common.data.PlayerData;
+import me.confuser.banmanager.common.ipaddr.IPAddress;
 import me.confuser.banmanager.common.listeners.CommonJoinHandler;
 import me.confuser.banmanager.common.listeners.CommonJoinListener;
 import me.confuser.banmanager.common.util.*;

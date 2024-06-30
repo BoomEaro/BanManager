@@ -49,7 +49,7 @@ public class BmAPI {
    * @throws SQLException
    */
   public static List<PlayerData> getPlayers(IPAddress ip) throws SQLException {
-    return plugin.getPlayerStorage().getDuplicatesInTime(ip, plugin.getConfig().getTimeAssociatedAlts());
+    return plugin.getDuplicatePlayerStorage().getDuplicatesInTime(ip, plugin.getConfig().getTimeAssociatedAlts());
   }
 
   /**

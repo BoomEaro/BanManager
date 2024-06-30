@@ -3,20 +3,33 @@ package me.confuser.banmanager.common.listeners;
 import me.confuser.banmanager.common.BanManagerPlugin;
 import me.confuser.banmanager.common.CommonPlayer;
 import me.confuser.banmanager.common.commands.NotesCommand;
-import me.confuser.banmanager.common.data.*;
+import me.confuser.banmanager.common.data.IpBanData;
+import me.confuser.banmanager.common.data.IpRangeBanData;
+import me.confuser.banmanager.common.data.NameBanData;
+import me.confuser.banmanager.common.data.PlayerBanData;
+import me.confuser.banmanager.common.data.PlayerData;
+import me.confuser.banmanager.common.data.PlayerMuteData;
+import me.confuser.banmanager.common.data.PlayerNoteData;
+import me.confuser.banmanager.common.data.PlayerWarnData;
 import me.confuser.banmanager.common.google.guava.cache.Cache;
 import me.confuser.banmanager.common.google.guava.cache.CacheBuilder;
 import me.confuser.banmanager.common.ipaddr.IPAddress;
 import me.confuser.banmanager.common.maxmind.db.model.CountryResponse;
 import me.confuser.banmanager.common.ormlite.dao.CloseableIterator;
 import me.confuser.banmanager.common.storage.PlayerBanStorage;
-import me.confuser.banmanager.common.util.*;
+import me.confuser.banmanager.common.util.DateUtils;
+import me.confuser.banmanager.common.util.IPUtils;
+import me.confuser.banmanager.common.util.Message;
+import me.confuser.banmanager.common.util.ReportList;
+import me.confuser.banmanager.common.util.UUIDUtils;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -296,6 +309,115 @@ public class CommonJoinListener {
         if (plugin.getConfig().isLogIpsEnabled()) plugin.getPlayerHistoryStorage().create(player);
     }
 
+    public void onServerJoin(CommonPlayer player, InetAddress address, String serverName) {
+        if (!this.plugin.getConfig().getDetectServerJoin().contains(serverName)) {
+            return;
+        }
+
+        ForkJoinPool.commonPool().execute(() -> {
+            UUID id = player.getUniqueId();
+            String name = player.getName();
+            IPAddress ip = IPUtils.toIPAddress(address);
+
+            PlayerData playerData = new PlayerData(id, name, ip);
+
+            try {
+                plugin.getDuplicatePlayerStorage().createOrUpdate(playerData);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            if (!plugin.getConfig().isDuplicateIpCheckEnabled()) {
+                return;
+            }
+
+            if (player.hasPermission("bm.exempt.alts")) {
+                return;
+            }
+
+            plugin.getScheduler().runAsyncLater(() -> {
+                // Handle quick disconnects
+                if (!player.isOnline()) {
+                    return;
+                }
+
+                final UUID uuid = player.getUniqueId();
+                List<PlayerData> duplicates = plugin.getPlayerBanStorage().getDuplicates(ip);
+                duplicates.addAll(plugin.getPlayerABanStorage().getDuplicates(ip));
+
+                if (duplicates.isEmpty()) {
+                    return;
+                }
+
+                if (plugin.getConfig().isDenyAlts()) {
+                    denyAlts(duplicates, uuid);
+                }
+
+                if (plugin.getConfig().isPunishAlts()) {
+                    try {
+                        punishAlts(duplicates, uuid);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                StringBuilder sb = new StringBuilder();
+
+                for (PlayerData data : duplicates) {
+                    if (data.getUUID().equals(uuid)) {
+                        continue;
+                    }
+
+                    sb.append(data.getName());
+                    sb.append(", ");
+                }
+
+                if (sb.length() == 0) return;
+                if (sb.length() >= 2) sb.setLength(sb.length() - 2);
+
+                Message message = Message.get("duplicateIP");
+                message.set("player", player.getName());
+                message.set("players", sb.toString());
+
+                plugin.getServer().broadcast(message.toString(), "bm.notify.duplicateips");
+            }, 20L);
+
+            plugin.getScheduler().runAsyncLater(() -> {
+                // Handle quick disconnects
+                if (!player.isOnline()) {
+                    return;
+                }
+
+                final UUID uuid = player.getUniqueId();
+                List<PlayerData> duplicates = plugin.getDuplicatePlayerStorage().getDuplicatesInTime(ip, plugin.getConfig().getTimeAssociatedAlts());
+
+                if (duplicates.isEmpty()) {
+                    return;
+                }
+
+                StringBuilder sb = new StringBuilder();
+
+                for (PlayerData data : duplicates) {
+                    if (data.getUUID().equals(uuid)) {
+                        continue;
+                    }
+
+                    sb.append(data.getName());
+                    sb.append(", ");
+                }
+
+                if (sb.length() == 0) return;
+                if (sb.length() >= 2) sb.setLength(sb.length() - 2);
+
+                Message message = Message.get("duplicateIPAlts");
+                message.set("player", player.getName());
+                message.set("players", sb.toString());
+
+                plugin.getServer().broadcast(message.toString(), "bm.notify.alts");
+            }, 20L);
+        });
+    }
+
     public void onJoin(final CommonPlayer player) {
         plugin.getScheduler().runAsyncLater(() -> {
             // Handle quick disconnects
@@ -435,7 +557,7 @@ public class CommonJoinListener {
         if (plugin.getConfig().getMaxMultiaccountsRecently() > 0 && !player.hasPermission("bm.exempt.maxmultiaccountsrecently")) {
             long timeDiff = plugin.getConfig().getMultiaccountsTime();
 
-            List<PlayerData> multiAccountPlayers = plugin.getPlayerStorage().getDuplicatesInTime(ip, timeDiff);
+            List<PlayerData> multiAccountPlayers = plugin.getDuplicatePlayerStorage().getDuplicatesInTime(ip, timeDiff);
 
             if (multiAccountPlayers.size() > plugin.getConfig().getMaxMultiaccountsRecently()) {
                 handler.handleDeny(Message.get("deniedMultiaccounts"));
@@ -443,93 +565,6 @@ public class CommonJoinListener {
             }
 
         }
-
-        if (!plugin.getConfig().isDuplicateIpCheckEnabled()) {
-            return;
-        }
-
-        if (player.hasPermission("bm.exempt.alts")) return;
-
-        plugin.getScheduler().runAsyncLater(() -> {
-            // Handle quick disconnects
-            if (!player.isOnline()) {
-                return;
-            }
-
-            final UUID uuid = player.getUniqueId();
-            List<PlayerData> duplicates = plugin.getPlayerBanStorage().getDuplicates(ip);
-            duplicates.addAll(plugin.getPlayerABanStorage().getDuplicates(ip));
-
-            if (duplicates.isEmpty()) {
-                return;
-            }
-
-            if (plugin.getConfig().isDenyAlts()) {
-                denyAlts(duplicates, uuid);
-            }
-
-            if (plugin.getConfig().isPunishAlts()) {
-                try {
-                    punishAlts(duplicates, uuid);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            StringBuilder sb = new StringBuilder();
-
-            for (PlayerData playerData : duplicates) {
-                if (playerData.getUUID().equals(uuid)) {
-                    continue;
-                }
-
-                sb.append(playerData.getName());
-                sb.append(", ");
-            }
-
-            if (sb.length() == 0) return;
-            if (sb.length() >= 2) sb.setLength(sb.length() - 2);
-
-            Message message = Message.get("duplicateIP");
-            message.set("player", player.getName());
-            message.set("players", sb.toString());
-
-            plugin.getServer().broadcast(message.toString(), "bm.notify.duplicateips");
-        }, 20L);
-
-        plugin.getScheduler().runAsyncLater(() -> {
-            // Handle quick disconnects
-            if (!player.isOnline()) {
-                return;
-            }
-
-            final UUID uuid = player.getUniqueId();
-            List<PlayerData> duplicates = plugin.getPlayerStorage().getDuplicatesInTime(ip, plugin.getConfig().getTimeAssociatedAlts());
-
-            if (duplicates.isEmpty()) {
-                return;
-            }
-
-            StringBuilder sb = new StringBuilder();
-
-            for (PlayerData playerData : duplicates) {
-                if (playerData.getUUID().equals(uuid)) {
-                    continue;
-                }
-
-                sb.append(playerData.getName());
-                sb.append(", ");
-            }
-
-            if (sb.length() == 0) return;
-            if (sb.length() >= 2) sb.setLength(sb.length() - 2);
-
-            Message message = Message.get("duplicateIPAlts");
-            message.set("player", player.getName());
-            message.set("players", sb.toString());
-
-            plugin.getServer().broadcast(message.toString(), "bm.notify.alts");
-        }, 20L);
     }
 
     private void handleJoinDeny(PlayerData player, PlayerData actor, String reason) {

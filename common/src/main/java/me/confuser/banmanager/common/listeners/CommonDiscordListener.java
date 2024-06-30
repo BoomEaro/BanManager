@@ -45,7 +45,7 @@ public class CommonDiscordListener {
   }
 
   public Object[] notifyOnBan(IpBanData ban) {
-    List<PlayerData> players = plugin.getPlayerStorage().getDuplicatesInTime(ban.getIp(), plugin.getConfig().getTimeAssociatedAlts());
+    List<PlayerData> players = plugin.getDuplicatePlayerStorage().getDuplicatesInTime(ban.getIp(), plugin.getConfig().getTimeAssociatedAlts());
     StringBuilder playerNames = new StringBuilder();
 
     for (PlayerData player : players) {

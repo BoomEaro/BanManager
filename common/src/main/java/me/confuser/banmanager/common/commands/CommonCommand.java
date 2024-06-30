@@ -129,8 +129,16 @@ public abstract class CommonCommand {
     IPAddress ip = null;
 
     if (isName) {
-      PlayerData player = BanManagerPlugin.getInstance().getPlayerStorage().retrieve(ipStr, false);
-      if (player == null) return null;
+      List<PlayerData> players = BanManagerPlugin.getInstance().getDuplicatePlayerStorage().retrieve(ipStr);
+      if (players.isEmpty()) {
+        return null;
+      }
+
+      PlayerData player = players.get(0);
+
+      if (player == null) {
+        return null;
+      }
 
       ip = player.getIp();
     } else {

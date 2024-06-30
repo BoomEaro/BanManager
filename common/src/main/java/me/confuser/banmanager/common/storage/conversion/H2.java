@@ -25,6 +25,7 @@ public class H2 implements IConverter {
   private PlayerMuteStorage playerMuteStorage;
   private PlayerMuteRecordStorage playerMuteRecordStorage;
   private PlayerStorage playerStorage;
+  private DuplicatePlayerStorage duplicatePlayerStorage;
   private PlayerWarnStorage playerWarnStorage;
   private PlayerNoteStorage playerNoteStorage;
   private PlayerHistoryStorage playerHistoryStorage;
@@ -68,6 +69,7 @@ public class H2 implements IConverter {
 
       // Setup data storage
       playerStorage = new PlayerStorage(connection, config.getTable("players"));
+      duplicatePlayerStorage = new DuplicatePlayerStorage(connection, config.getTable("duplicatePlayers"));
       playerBanStorage = new PlayerBanStorage(connection, config.getTable("playerBans"));
       playerABanStorage = new PlayerABanStorage(connection, config.getTable("playerABans"));
       playerBanRecordStorage = new PlayerBanRecordStorage(connection, config.getTable("playerBanRecords"));

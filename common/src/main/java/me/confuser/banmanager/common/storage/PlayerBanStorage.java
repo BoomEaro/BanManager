@@ -295,7 +295,7 @@ public class PlayerBanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
 
     QueryBuilder<PlayerBanData, Integer> query = queryBuilder();
     try {
-      QueryBuilder<PlayerData, byte[]> playerQuery = plugin.getPlayerStorage().queryBuilder();
+      QueryBuilder<PlayerData, byte[]> playerQuery = plugin.getDuplicatePlayerStorage().queryBuilder();
 
       Where<PlayerData, byte[]> where = playerQuery.where();
       where.eq("ip", ip);
