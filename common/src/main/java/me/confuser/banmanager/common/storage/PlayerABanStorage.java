@@ -8,6 +8,7 @@ import me.confuser.banmanager.common.ipaddr.AddressValueException;
 import me.confuser.banmanager.common.ipaddr.IPAddress;
 import me.confuser.banmanager.common.ormlite.dao.BaseDaoImpl;
 import me.confuser.banmanager.common.ormlite.dao.CloseableIterator;
+import me.confuser.banmanager.common.ormlite.field.DataType;
 import me.confuser.banmanager.common.ormlite.stmt.QueryBuilder;
 import me.confuser.banmanager.common.ormlite.stmt.StatementBuilder;
 import me.confuser.banmanager.common.ormlite.stmt.Where;
@@ -259,38 +260,56 @@ public class PlayerABanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
 
   }
 
-  public List<PlayerData> getDuplicates(IPAddress ip) {
+  public List<PlayerData> getDuplicates(IPAddress address) {
     ArrayList<PlayerData> players = new ArrayList<>();
 
-    if (plugin.getConfig().getBypassPlayerIps().contains(ip.toString())) {
+    if (plugin.getConfig().getBypassPlayerIps().contains(address.toString())) {
       return players;
     }
 
-    QueryBuilder<PlayerBanData, Integer> query = queryBuilder();
     try {
-      QueryBuilder<PlayerData, byte[]> playerQuery = plugin.getDuplicatePlayerStorage().queryBuilder();
+      CloseableIterator<Object[]> itr = null;
+      try {
+        String banTableName = getTableName();
+        String playerTableName = plugin.getDuplicatePlayerStorage().getTableName();
+        itr = queryRaw("SELECT *\n" +
+                "FROM " + banTableName + " \n" +
+                "LEFT JOIN " + playerTableName + " ON " + playerTableName + ".id = " + banTableName + ".player_id\n" +
+                "WHERE " + playerTableName + ".ip = UNHEX('" + address.toHexString(false) + "') \n" +
+                ";", new DataType[]{
+                DataType.INTEGER,
+                DataType.BYTE_ARRAY,
+                DataType.STRING,
+                DataType.BYTE_ARRAY,
+                DataType.LONG,
+                DataType.LONG,
+                DataType.LONG,
+                DataType.BOOLEAN,
+                DataType.BYTE_ARRAY,
+                DataType.STRING,
+                DataType.BYTE_ARRAY,
+                DataType.LONG
+        }).closeableIterator();
 
-      Where<PlayerData, byte[]> where = playerQuery.where();
-      where.eq("ip", ip);
-      playerQuery.setWhere(where);
+        while (itr.hasNext()) {
+          Object[] data = itr.next();
 
-      query.leftJoin(playerQuery);
-    } catch (SQLException e) {
-      e.printStackTrace();
-      return players;
-    }
+          PlayerData player = new PlayerData(UUIDUtils.fromBytes((byte[]) data[9]), (String) data[9], address, (Long) data[11]);
 
-    CloseableIterator<PlayerBanData> itr = null;
-    try {
-      itr = query.iterator();
+          if (!plugin.getExemptionsConfig().isExempt(player, "alts")) {
+            players.add(player);
+          }
+        }
 
-      while (itr.hasNext()) {
-        players.add(itr.next().getPlayer());
+      } catch (SQLException e) {
+        e.printStackTrace();
+      } finally {
+        if (itr != null) itr.closeQuietly();
       }
-    } catch (SQLException e) {
+
+    } catch (Exception e) {
       e.printStackTrace();
-    } finally {
-      if (itr != null) itr.closeQuietly();
+      return players;
     }
 
     return players;

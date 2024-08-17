@@ -5,6 +5,7 @@ import lombok.Getter;
 import me.confuser.banmanager.common.BanManagerPlugin;
 import me.confuser.banmanager.common.CommonPlayer;
 import me.confuser.banmanager.common.configs.PluginInfo;
+import me.confuser.banmanager.common.data.DuplicatePlayerData;
 import me.confuser.banmanager.common.data.PlayerData;
 import me.confuser.banmanager.common.data.PlayerNoteData;
 import me.confuser.banmanager.common.ipaddr.IPAddress;
@@ -129,12 +130,12 @@ public abstract class CommonCommand {
     IPAddress ip = null;
 
     if (isName) {
-      List<PlayerData> players = BanManagerPlugin.getInstance().getDuplicatePlayerStorage().retrieve(ipStr);
+      List<DuplicatePlayerData> players = BanManagerPlugin.getInstance().getDuplicatePlayerStorage().retrieve(ipStr);
       if (players.isEmpty()) {
         return null;
       }
 
-      PlayerData player = players.get(0);
+      DuplicatePlayerData player = players.get(0);
 
       if (player == null) {
         return null;

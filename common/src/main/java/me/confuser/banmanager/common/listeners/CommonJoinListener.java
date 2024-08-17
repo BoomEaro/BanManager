@@ -3,14 +3,7 @@ package me.confuser.banmanager.common.listeners;
 import me.confuser.banmanager.common.BanManagerPlugin;
 import me.confuser.banmanager.common.CommonPlayer;
 import me.confuser.banmanager.common.commands.NotesCommand;
-import me.confuser.banmanager.common.data.IpBanData;
-import me.confuser.banmanager.common.data.IpRangeBanData;
-import me.confuser.banmanager.common.data.NameBanData;
-import me.confuser.banmanager.common.data.PlayerBanData;
-import me.confuser.banmanager.common.data.PlayerData;
-import me.confuser.banmanager.common.data.PlayerMuteData;
-import me.confuser.banmanager.common.data.PlayerNoteData;
-import me.confuser.banmanager.common.data.PlayerWarnData;
+import me.confuser.banmanager.common.data.*;
 import me.confuser.banmanager.common.google.guava.cache.Cache;
 import me.confuser.banmanager.common.google.guava.cache.CacheBuilder;
 import me.confuser.banmanager.common.ipaddr.IPAddress;
@@ -319,7 +312,7 @@ public class CommonJoinListener {
             String name = player.getName();
             IPAddress ip = IPUtils.toIPAddress(address);
 
-            PlayerData playerData = new PlayerData(id, name, ip);
+            DuplicatePlayerData playerData = new DuplicatePlayerData(id, name, ip);
 
             try {
                 plugin.getDuplicatePlayerStorage().createOrUpdate(playerData);
