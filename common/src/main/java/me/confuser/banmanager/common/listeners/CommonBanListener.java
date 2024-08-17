@@ -95,6 +95,46 @@ public class CommonBanListener {
     }
   }
 
+  public void notifyOnABan(PlayerABanData data, boolean silent) {
+    String broadcastPermission;
+    Message message;
+
+    if (data.getExpires() == 0) {
+      broadcastPermission = "bm.notify.aban";
+      message = Message.get("aban.notify");
+    } else {
+      broadcastPermission = "bm.notify.atempban";
+      message = Message.get("atempban.notify");
+      message.set("expires", DateUtils.getDifferenceFormat(data.getExpires()));
+    }
+
+    message
+            .set("id", data.getId())
+            .set("player", data.getPlayer().getName())
+            .set("playerId", data.getPlayer().getUUID().toString())
+            .set("actor", data.getActor().getName())
+            .set("reason", data.getReason());
+
+    if (!silent) {
+      plugin.getServer().broadcast(message.toString(), broadcastPermission);
+    } else if (plugin.getPlayerStorage().getConsole().getUUID().equals(data.getActor().getUUID())) {
+      plugin.getServer().getConsoleSender().sendMessage(message);
+      return;
+    }
+
+    // Check if the sender is online and does not have the
+    // broadcastPermission
+    CommonPlayer player = plugin.getServer().getPlayer(data.getActor().getUUID());
+
+    if (player == null || !player.isOnline()) {
+      return;
+    }
+
+    if (silent || !player.hasPermission(broadcastPermission)) {
+      message.sendTo(player);
+    }
+  }
+
 
   public void notifyOnBan(IpBanData data, boolean silent) {
     String broadcastPermission;

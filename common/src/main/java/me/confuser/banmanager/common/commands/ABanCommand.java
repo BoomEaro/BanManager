@@ -2,7 +2,7 @@ package me.confuser.banmanager.common.commands;
 
 import me.confuser.banmanager.common.BanManagerPlugin;
 import me.confuser.banmanager.common.CommonPlayer;
-import me.confuser.banmanager.common.data.PlayerBanData;
+import me.confuser.banmanager.common.data.PlayerABanData;
 import me.confuser.banmanager.common.data.PlayerData;
 import me.confuser.banmanager.common.util.DateUtils;
 import me.confuser.banmanager.common.util.Message;
@@ -112,7 +112,7 @@ public class ABanCommand extends CommonCommand {
       if (actor == null) return;
 
       if (isBanned) {
-        PlayerBanData ban;
+        PlayerABanData ban;
 
         if (isUUID) {
           ban = getPlugin().getPlayerABanStorage().getBan(UUID.fromString(playerName));
@@ -131,7 +131,7 @@ public class ABanCommand extends CommonCommand {
         }
       }
 
-      final PlayerBanData ban = new PlayerBanData(player, actor, parser.getReason().getMessage(), isSilent);
+      final PlayerABanData ban = new PlayerABanData(player, actor, parser.getReason().getMessage(), isSilent);
       boolean created;
 
       try {

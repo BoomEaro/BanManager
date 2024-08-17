@@ -36,6 +36,25 @@ public class CommonHooksListener {
     }
   }
 
+  public void onBan(PlayerABanData data, boolean pre) {
+    HooksConfig config = plugin.getConfig().getHooksConfig();
+    final Hook hook = data.getExpires() == 0 ? config.getHook("ban") : config.getHook("tempban");
+
+    if (hook == null) return;
+
+    List<ActionCommand> commands = pre ? hook.getPre() : hook.getPost();
+
+    if (commands.size() != 0) {
+      executeCommands(commands, ImmutableMap.of(
+              "player", data.getPlayer().getName()
+              , "playerId", data.getPlayer().getUUID().toString()
+              , "actor", data.getActor().getName()
+              , "reason", data.getReason()
+              , "expires", Long.toString(data.getExpires())
+      ));
+    }
+  }
+
   public void onUnban(PlayerBanData data, PlayerData actor, String reason) {
     HooksConfig config = plugin.getConfig().getHooksConfig();
     final Hook hook = config.getHook("unban");
@@ -52,6 +71,24 @@ public class CommonHooksListener {
       ));
     }
   }
+
+  public void onUnban(PlayerABanData data, PlayerData actor, String reason) {
+    HooksConfig config = plugin.getConfig().getHooksConfig();
+    final Hook hook = config.getHook("unban");
+
+    if (hook == null) return;
+
+    if (hook.getPost().size() != 0) {
+      executeCommands(hook.getPost(), ImmutableMap.of(
+              "player", data.getPlayer().getName()
+              , "playerId", data.getPlayer().getUUID().toString()
+              , "actor", actor.getName()
+              , "reason", reason
+              , "expires", Long.toString(data.getExpires())
+      ));
+    }
+  }
+
 
   public void onMute(PlayerMuteData data, boolean pre) {
     HooksConfig config = plugin.getConfig().getHooksConfig();

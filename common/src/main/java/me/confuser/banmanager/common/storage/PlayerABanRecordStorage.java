@@ -2,8 +2,8 @@ package me.confuser.banmanager.common.storage;
 
 import me.confuser.banmanager.common.BanManagerPlugin;
 import me.confuser.banmanager.common.configs.CleanUp;
-import me.confuser.banmanager.common.data.PlayerBanData;
-import me.confuser.banmanager.common.data.PlayerBanRecord;
+import me.confuser.banmanager.common.data.PlayerABanData;
+import me.confuser.banmanager.common.data.PlayerABanRecord;
 import me.confuser.banmanager.common.data.PlayerData;
 import me.confuser.banmanager.common.ormlite.dao.BaseDaoImpl;
 import me.confuser.banmanager.common.ormlite.dao.CloseableIterator;
@@ -17,10 +17,10 @@ import me.confuser.banmanager.common.util.DateUtils;
 
 import java.sql.SQLException;
 
-public class PlayerABanRecordStorage extends BaseDaoImpl<PlayerBanRecord, Integer> {
+public class PlayerABanRecordStorage extends BaseDaoImpl<PlayerABanRecord, Integer> {
 
   public PlayerABanRecordStorage(BanManagerPlugin plugin) throws SQLException {
-    super(plugin.getLocalConn(), (DatabaseTableConfig<PlayerBanRecord>) plugin.getConfig()
+    super(plugin.getLocalConn(), (DatabaseTableConfig<PlayerABanRecord>) plugin.getConfig()
         .getLocalDb()
         .getTable("playerABanRecords"));
 
@@ -50,22 +50,22 @@ public class PlayerABanRecordStorage extends BaseDaoImpl<PlayerBanRecord, Intege
   }
 
   public PlayerABanRecordStorage(ConnectionSource connection, DatabaseTableConfig<?> table) throws SQLException {
-    super(connection, (DatabaseTableConfig<PlayerBanRecord>) table);
+    super(connection, (DatabaseTableConfig<PlayerABanRecord>) table);
   }
 
-  public void addRecord(PlayerBanData ban, PlayerData actor, String reason) throws SQLException {
-    create(new PlayerBanRecord(ban, actor, reason));
+  public void addRecord(PlayerABanData ban, PlayerData actor, String reason) throws SQLException {
+    create(new PlayerABanRecord(ban, actor, reason));
   }
 
-  public CloseableIterator<PlayerBanRecord> findUnbans(long fromTime) throws SQLException {
+  public CloseableIterator<PlayerABanRecord> findUnbans(long fromTime) throws SQLException {
     if (fromTime == 0) {
       return iterator();
     }
 
     long checkTime = fromTime + DateUtils.getTimeDiff();
 
-    QueryBuilder<PlayerBanRecord, Integer> query = queryBuilder();
-    Where<PlayerBanRecord, Integer> where = query.where();
+    QueryBuilder<PlayerABanRecord, Integer> query = queryBuilder();
+    Where<PlayerABanRecord, Integer> where = query.where();
 
     where.ge("created", checkTime);
 
@@ -80,7 +80,7 @@ public class PlayerABanRecordStorage extends BaseDaoImpl<PlayerBanRecord, Intege
     return queryBuilder().where().eq("player_id", player).countOf();
   }
 
-  public CloseableIterator<PlayerBanRecord> getRecords(PlayerData player) throws SQLException {
+  public CloseableIterator<PlayerABanRecord> getRecords(PlayerData player) throws SQLException {
     return queryBuilder().where().eq("player_id", player).iterator();
   }
 
@@ -91,7 +91,7 @@ public class PlayerABanRecordStorage extends BaseDaoImpl<PlayerBanRecord, Intege
   }
 
   public int deleteAll(PlayerData player) throws SQLException {
-    DeleteBuilder<PlayerBanRecord, Integer> builder = deleteBuilder();
+    DeleteBuilder<PlayerABanRecord, Integer> builder = deleteBuilder();
 
     builder.where().eq("player_id", player);
 

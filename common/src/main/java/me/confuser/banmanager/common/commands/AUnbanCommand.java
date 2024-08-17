@@ -2,7 +2,7 @@ package me.confuser.banmanager.common.commands;
 
 
 import me.confuser.banmanager.common.BanManagerPlugin;
-import me.confuser.banmanager.common.data.PlayerBanData;
+import me.confuser.banmanager.common.data.PlayerABanData;
 import me.confuser.banmanager.common.data.PlayerData;
 import me.confuser.banmanager.common.util.Message;
 import me.confuser.banmanager.common.util.parsers.UnbanCommandParser;
@@ -57,7 +57,7 @@ public class AUnbanCommand extends CommonCommand {
     final String reason = parser.getReason().getMessage();
 
     getPlugin().getScheduler().runAsync(() -> {
-      PlayerBanData ban;
+      PlayerABanData ban;
 
       if (isUUID) {
         ban = getPlugin().getPlayerABanStorage().getBan(UUID.fromString(playerName));

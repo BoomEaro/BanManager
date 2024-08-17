@@ -64,7 +64,7 @@ public class CommonJoinListener {
 
             if (!plugin.getPlayerABanStorage().isBanned(id)) {
                 try {
-                    PlayerBanData ban = plugin.getPlayerABanStorage().retrieveBan(id);
+                    PlayerABanData ban = plugin.getPlayerABanStorage().retrieveBan(id);
 
                     if (ban != null) plugin.getPlayerABanStorage().addBan(ban);
                 } catch (SQLException e) {
@@ -241,7 +241,7 @@ public class CommonJoinListener {
         }
 
         if (plugin.getPlayerABanStorage().isBanned(id)) {
-            PlayerBanData data = plugin.getPlayerABanStorage().getBan(id);
+            PlayerABanData data = plugin.getPlayerABanStorage().getBan(id);
 
             if (data != null && data.hasExpired()) {
                 try {
@@ -593,31 +593,45 @@ public class CommonJoinListener {
 
             PlayerBanData ban = plugin.getPlayerBanStorage().getBan(player.getUUID());
 
-            if (ban == null) continue;
+            if (ban != null && !ban.hasExpired()) {
+                CommonPlayer bukkitPlayer = plugin.getServer().getPlayer(uuid);
+                if (bukkitPlayer == null) continue;
 
-            ban = plugin.getPlayerABanStorage().getBan(player.getUUID());
+                plugin.getScheduler().runSync(() -> {
+                    if (!bukkitPlayer.isOnline()) {
+                        return;
+                    }
 
-            if (ban == null) continue;
+                    Message kickMessage = Message.get("denyalts.player.disallowed")
+                            .set("player", player.getName())
+                            .set("reason", ban.getReason())
+                            .set("id", ban.getId())
+                            .set("actor", ban.getActor().getName());
 
-            if (ban.hasExpired()) continue;
+                    bukkitPlayer.kick(kickMessage.toString());
+                });
+                continue;
+            }
 
-            CommonPlayer bukkitPlayer = plugin.getServer().getPlayer(uuid);
-            if (bukkitPlayer == null) continue;
+            PlayerABanData aBan = plugin.getPlayerABanStorage().getBan(player.getUUID());
+            if (aBan != null && !aBan.hasExpired()) {
+                CommonPlayer bukkitPlayer = plugin.getServer().getPlayer(uuid);
+                if (bukkitPlayer == null) continue;
 
-            PlayerBanData finalBan = ban;
-            plugin.getScheduler().runSync(() -> {
-                if (!bukkitPlayer.isOnline()) {
-                    return;
-                }
+                plugin.getScheduler().runSync(() -> {
+                    if (!bukkitPlayer.isOnline()) {
+                        return;
+                    }
 
-                Message kickMessage = Message.get("denyalts.player.disallowed")
-                        .set("player", player.getName())
-                        .set("reason", finalBan.getReason())
-                        .set("id", finalBan.getId())
-                        .set("actor", finalBan.getActor().getName());
+                    Message kickMessage = Message.get("denyalts.player.disallowed")
+                            .set("player", player.getName())
+                            .set("reason", aBan.getReason())
+                            .set("id", aBan.getId())
+                            .set("actor", aBan.getActor().getName());
 
-                bukkitPlayer.kick(kickMessage.toString());
-            });
+                    bukkitPlayer.kick(kickMessage.toString());
+                });
+            }
         }
     }
 
@@ -662,12 +676,12 @@ public class CommonJoinListener {
                     continue;
                 }
 
-                PlayerBanData ban = plugin.getPlayerABanStorage().getBan(player.getUUID());
+                PlayerABanData ban = plugin.getPlayerABanStorage().getBan(player.getUUID());
 
                 if (ban == null) continue;
                 if (ban.hasExpired()) continue;
 
-                final PlayerBanData newBan = new PlayerBanData(plugin.getPlayerStorage().queryForId(UUIDUtils.toBytes(uuid)),
+                final PlayerABanData newBan = new PlayerABanData(plugin.getPlayerStorage().queryForId(UUIDUtils.toBytes(uuid)),
                         plugin.getPlayerStorage().getConsole(),
                         ban.getReason(),
                         ban.isSilent(),

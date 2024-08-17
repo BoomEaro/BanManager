@@ -2,7 +2,7 @@ package me.confuser.banmanager.common.storage;
 
 import me.confuser.banmanager.common.BanManagerPlugin;
 import me.confuser.banmanager.common.api.events.CommonEvent;
-import me.confuser.banmanager.common.data.PlayerBanData;
+import me.confuser.banmanager.common.data.PlayerABanData;
 import me.confuser.banmanager.common.data.PlayerData;
 import me.confuser.banmanager.common.ipaddr.AddressValueException;
 import me.confuser.banmanager.common.ipaddr.IPAddress;
@@ -28,18 +28,18 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class PlayerABanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
+public class PlayerABanStorage extends BaseDaoImpl<PlayerABanData, Integer> {
 
   private BanManagerPlugin plugin;
-  private ConcurrentHashMap<UUID, PlayerBanData> bans = new ConcurrentHashMap<>();
+  private ConcurrentHashMap<UUID, PlayerABanData> bans = new ConcurrentHashMap<>();
 
   public PlayerABanStorage(BanManagerPlugin plugin) throws SQLException {
-    super(plugin.getLocalConn(), (DatabaseTableConfig<PlayerBanData>) plugin.getConfig().getLocalDb()
+    super(plugin.getLocalConn(), (DatabaseTableConfig<PlayerABanData>) plugin.getConfig().getLocalDb()
         .getTable("playerABans"));
 
     this.plugin = plugin;
 
-    DatabaseTableConfig<PlayerBanData> test = (DatabaseTableConfig<PlayerBanData>) plugin.getConfig().getLocalDb()
+    DatabaseTableConfig<PlayerABanData> test = (DatabaseTableConfig<PlayerABanData>) plugin.getConfig().getLocalDb()
             .getTable("playerABans");
 
     test.getTableName();
@@ -69,7 +69,7 @@ public class PlayerABanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
   }
 
   public PlayerABanStorage(ConnectionSource connection, DatabaseTableConfig<?> table) throws SQLException {
-    super(connection, (DatabaseTableConfig<PlayerBanData>) table);
+    super(connection, (DatabaseTableConfig<PlayerABanData>) table);
   }
 
   private void loadAll() throws SQLException {
@@ -136,7 +136,7 @@ public class PlayerABanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
           continue;
         }
 
-        PlayerBanData ban = new PlayerBanData(results.getInt(0), player, actor,
+        PlayerABanData ban = new PlayerABanData(results.getInt(0), player, actor,
             results.getString(9),
             results.getBoolean(13),
             results.getLong(10),
@@ -154,7 +154,7 @@ public class PlayerABanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
     }
   }
 
-  public ConcurrentHashMap<UUID, PlayerBanData> getBans() {
+  public ConcurrentHashMap<UUID, PlayerABanData> getBans() {
     return bans;
   }
 
@@ -166,25 +166,25 @@ public class PlayerABanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
     return getBan(playerName) != null;
   }
 
-  public PlayerBanData retrieveBan(UUID uuid) throws SQLException {
-    List<PlayerBanData> bans = queryForEq("player_id", UUIDUtils.toBytes(uuid));
+  public PlayerABanData retrieveBan(UUID uuid) throws SQLException {
+    List<PlayerABanData> bans = queryForEq("player_id", UUIDUtils.toBytes(uuid));
 
     if (bans.isEmpty()) return null;
 
     return bans.get(0);
   }
 
-  public PlayerBanData getBan(UUID uuid) {
+  public PlayerABanData getBan(UUID uuid) {
     return bans.get(uuid);
   }
 
-  public void addBan(PlayerBanData ban) {
+  public void addBan(PlayerABanData ban) {
     bans.put(ban.getPlayer().getUUID(), ban);
 
     plugin.getServer().callEvent("PlayerABannedEvent", ban, ban.isSilent() || !plugin.getConfig().isBroadcastOnSync());
   }
 
-  public void removeBan(PlayerBanData ban) {
+  public void removeBan(PlayerABanData ban) {
     removeBan(ban.getPlayer().getUUID());
   }
 
@@ -192,8 +192,8 @@ public class PlayerABanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
     bans.remove(uuid);
   }
 
-  public PlayerBanData getBan(String playerName) {
-    for (PlayerBanData ban : bans.values()) {
+  public PlayerABanData getBan(String playerName) {
+    for (PlayerABanData ban : bans.values()) {
       if (ban.getPlayer().getName().equalsIgnoreCase(playerName)) {
         return ban;
       }
@@ -202,7 +202,7 @@ public class PlayerABanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
     return null;
   }
 
-  public boolean ban(PlayerBanData ban) throws SQLException {
+  public boolean ban(PlayerABanData ban) throws SQLException {
     CommonEvent event = plugin.getServer().callEvent("PlayerABanEvent", ban, ban.isSilent());
 
     if (event.isCancelled()) {
@@ -217,15 +217,15 @@ public class PlayerABanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
     return true;
   }
 
-  public boolean unban(PlayerBanData ban, PlayerData actor) throws SQLException {
+  public boolean unban(PlayerABanData ban, PlayerData actor) throws SQLException {
     return unban(ban, actor, "");
   }
 
-  public boolean unban(PlayerBanData ban, PlayerData actor, String reason) throws SQLException {
+  public boolean unban(PlayerABanData ban, PlayerData actor, String reason) throws SQLException {
     return unban(ban, actor, reason, false);
   }
 
-  public boolean unban(PlayerBanData ban, PlayerData actor, String reason, boolean delete) throws SQLException {
+  public boolean unban(PlayerABanData ban, PlayerData actor, String reason, boolean delete) throws SQLException {
     CommonEvent event = plugin.getServer().callEvent("PlayerAUnbanEvent", ban, actor, reason);
 
     if (event.isCancelled()) {
@@ -235,20 +235,20 @@ public class PlayerABanStorage extends BaseDaoImpl<PlayerBanData, Integer> {
     delete(ban);
     bans.remove(ban.getPlayer().getUUID());
 
-    if (!delete) plugin.getPlayerBanRecordStorage().addRecord(ban, actor, reason);
+    if (!delete) plugin.getPlayerABanRecordStorage().addRecord(ban, actor, reason);
 
     return true;
   }
 
-  public CloseableIterator<PlayerBanData> findBans(long fromTime) throws SQLException {
+  public CloseableIterator<PlayerABanData> findBans(long fromTime) throws SQLException {
     if (fromTime == 0) {
       return iterator();
     }
 
     long checkTime = fromTime + DateUtils.getTimeDiff();
 
-    QueryBuilder<PlayerBanData, Integer> query = queryBuilder();
-    Where<PlayerBanData, Integer> where = query.where();
+    QueryBuilder<PlayerABanData, Integer> query = queryBuilder();
+    Where<PlayerABanData, Integer> where = query.where();
     where
         .ge("created", checkTime)
         .or()

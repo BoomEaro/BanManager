@@ -183,9 +183,9 @@ public class H2 implements IConverter {
   public void importPlayerABans() {
     plugin.getLogger().info("Importing player abans");
 
-    try (CloseableIterator<PlayerBanData> itr = playerABanStorage.closeableIterator()) {
+    try (CloseableIterator<PlayerABanData> itr = playerABanStorage.closeableIterator()) {
       while (itr.hasNext()) {
-        PlayerBanData data = itr.next();
+        PlayerABanData data = itr.next();
 
         try {
           plugin.getPlayerABanStorage().createIfNotExists(data);
@@ -202,9 +202,9 @@ public class H2 implements IConverter {
 
     plugin.getLogger().info("Importing player aban records");
 
-    try (CloseableIterator<PlayerBanRecord> itr = playerABanRecordStorage.closeableIterator()) {
+    try (CloseableIterator<PlayerABanRecord> itr = playerABanRecordStorage.closeableIterator()) {
       while (itr.hasNext()) {
-        PlayerBanRecord data = itr.next();
+        PlayerABanRecord data = itr.next();
 
         try {
           plugin.getPlayerABanRecordStorage().createIfNotExists(data);
